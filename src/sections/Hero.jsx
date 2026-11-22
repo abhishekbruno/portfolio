@@ -95,7 +95,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Top Editorial Index & Coordinates */}
-      <div className="absolute top-24 left-4 sm:left-8 flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#888888] tracking-[0.25em] uppercase z-20 pointer-events-none">
+      <div className="absolute top-24 left-4 sm:left-8 lg:left-[6vw] xl:left-[7vw] 2xl:left-[8vw] flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#888888] tracking-[0.25em] uppercase z-20 pointer-events-none">
         <span className="text-[#C1121F] font-bold">001</span>
         <span>/</span>
         <span>RESEARCH &amp; SOFTWARE ARCHITECTURE</span>
@@ -124,8 +124,8 @@ export default function Hero() {
         </Suspense>
       </motion.div>
 
-      {/* ─── FOREGROUND: Cinematic Typography & Controls ─── */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-center pointer-events-none">
+      {/* ─── FOREGROUND: Cinematic Typography & Controls (Asymmetric Left-Aligned Composition) ─── */}
+      <div className="relative z-20 w-full px-4 sm:px-8 lg:px-0 lg:pl-[6vw] xl:pl-[7vw] 2xl:pl-[8vw] flex flex-col justify-center pointer-events-none">
         <motion.div
           style={{ y: contentY }}
           className="max-w-2xl lg:max-w-3xl flex flex-col items-start text-left pointer-events-auto"
