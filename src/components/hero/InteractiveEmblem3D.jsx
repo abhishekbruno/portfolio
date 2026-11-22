@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { RotateCcw, Compass } from 'lucide-react';
-import { createEmblemGroup } from './EmblemGeometry';
+import { createEmblemGroup, createStudioEnvironmentMap } from './EmblemGeometry';
 import { setupEmblemLighting } from './EmblemLighting';
 import { createEmblemControls } from './EmblemControls';
 import EmblemFallback from './EmblemFallback';
@@ -89,15 +89,21 @@ export default function InteractiveEmblem3D() {
     renderer.toneMappingExposure = 1.35;
     currentMount.appendChild(renderer.domElement);
 
-    // 2. Master Environmental Positioning Group
+    // 2. High-Fidelity Studio Environment Reflection Map (Anisotropic Specular Response)
+    const studioEnvMap = createStudioEnvironmentMap(renderer);
+    scene.environment = studioEnvMap;
+
+    // 3. Master Environmental Positioning Group
     const positionGroup = new THREE.Group();
     scene.add(positionGroup);
 
-    // 3. Construct the 3D AB Medallion Geometry & Materials
+    // 4. Construct the Ultra-Detailed 3D AB Medallion Geometry & Materials
     const emblemGroup = createEmblemGroup();
     positionGroup.add(emblemGroup);
 
-    // 4. Responsive Positioning & Scaling
+    let basePosY = -0.05;
+
+    // 5. Responsive Positioning & Scaling
     const updateEmblemLayout = (w, h) => {
       const isDesktop = w >= 1024;
       const isTablet = w >= 640 && w < 1024;
@@ -105,24 +111,32 @@ export default function InteractiveEmblem3D() {
       if (isDesktop) {
         const aspect = w / h;
         const offsetX = Math.min(2.7, aspect * 1.35);
-        positionGroup.position.set(offsetX, -0.05, 0);
+        basePosY = -0.05;
+        positionGroup.position.set(offsetX, basePosY, 0);
         positionGroup.scale.set(1.32, 1.32, 1.32);
       } else if (isTablet) {
-        positionGroup.position.set(1.35, 0.15, -1.0);
+        basePosY = 0.15;
+        positionGroup.position.set(1.35, basePosY, -1.0);
         positionGroup.scale.set(1.1, 1.1, 1.1);
       } else {
         // Mobile: Centered background centerpiece
-        positionGroup.position.set(0, 0.65, -1.4);
+        basePosY = 0.65;
+        positionGroup.position.set(0, basePosY, -1.4);
         positionGroup.scale.set(0.92, 0.92, 0.92);
       }
     };
 
     updateEmblemLayout(width, height);
 
-    // 5. Cinematic Lighting System
+    // 6. Cinematic Lighting System with Hover Sensitivity
     const lighting = setupEmblemLighting(scene);
 
-    // 6. Interactive 3-Axis Trackball & Inertia Controls
+    const onPointerEnter = () => lighting.setHover(true);
+    const onPointerLeave = () => lighting.setHover(false);
+    currentMount.addEventListener('pointerenter', onPointerEnter);
+    currentMount.addEventListener('pointerleave', onPointerLeave);
+
+    // 7. Interactive 3-Axis Trackball & Inertia Controls
     const controls = createEmblemControls(emblemGroup, renderer.domElement);
     controlsRef.current = controls;
 
@@ -198,8 +212,11 @@ export default function InteractiveEmblem3D() {
       // Controls update (handles inertia and idle drift)
       controls.update(elapsedTime);
 
-      // Lighting update (subtle rim breathing)
+      // Lighting update (subtle rim breathing & hover lerp)
       lighting.update(elapsedTime);
+
+      // Subtle suspended floating oscillation
+      positionGroup.position.y = basePosY + Math.sin(elapsedTime * 0.75) * 0.038;
 
       // Slow particle float
       const positions = particleGeo.attributes.position.array;
@@ -221,8 +238,12 @@ export default function InteractiveEmblem3D() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
 
+      currentMount.removeEventListener('pointerenter', onPointerEnter);
+      currentMount.removeEventListener('pointerleave', onPointerLeave);
+
       controls.dispose();
       lighting.dispose();
+      if (studioEnvMap) studioEnvMap.dispose();
 
       // Deep disposal of scene objects
       scene.traverse((obj) => {

@@ -24,8 +24,8 @@ export function createEmblemControls(emblemGroup, domElement) {
 
   // Angular velocity vector (rad/frame)
   const angularVelocity = new THREE.Vector3(0, 0, 0);
-  const maxAngularSpeed = 0.25;
-  const dampingFactor = 0.93;
+  const maxAngularSpeed = 0.22;
+  const dampingFactor = 0.94;
 
   // Reusable Quaternion math instances
   const qDelta = new THREE.Quaternion();
@@ -209,10 +209,10 @@ export function createEmblemControls(emblemGroup, domElement) {
 
     // 3. Autonomous Idle Motion (after user releases & inertia settles)
     if (!isDragging && timeSinceInteraction > 2.0 && angularVelocity.lengthSq() <= 0.000002) {
-      // Gentle constant orbital Y rotation
-      const idleYaw = 0.0035;
-      // Breathing vertical tilt
-      const idlePitch = Math.sin(time * 0.9) * 0.0018;
+      // Slow, mechanically precise orbital Y rotation
+      const idleYaw = 0.0022;
+      // Gentle breathing vertical tilt
+      const idlePitch = Math.sin(time * 0.7) * 0.0012;
 
       const qIdleY = new THREE.Quaternion().setFromAxisAngle(axisY, idleYaw);
       const qIdleX = new THREE.Quaternion().setFromAxisAngle(axisX, idlePitch);
