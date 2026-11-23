@@ -29,7 +29,7 @@ export default function Experience() {
           <motion.div
             initial={shouldReduceMotion ? { scaleY: 1 } : { scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, amount: 0.1 }}
+            viewport={{ once: false, amount: 0.1 }}
             style={{ originY: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
             className="absolute left-4 sm:left-1/2 top-4 bottom-4 -translate-x-1/2 w-[1px] bg-gradient-to-b from-[#C1121F] via-[#780000] to-[#292929]"
@@ -45,7 +45,7 @@ export default function Experience() {
                   key={item.id}
                   initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 28 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  viewport={{ once: false, amount: 0.2 }}
                   transition={{
                     duration: 0.65,
                     delay: index * 0.1,

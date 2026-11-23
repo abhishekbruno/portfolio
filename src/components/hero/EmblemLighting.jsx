@@ -16,37 +16,37 @@ export function setupEmblemLighting(scene) {
   const lightsGroup = new THREE.Group();
 
   // 1. Cool Ambient Base
-  const ambientLight = new THREE.AmbientLight(0x161822, 1.8);
+  const ambientLight = new THREE.AmbientLight(0x202833, 0.72);
   lightsGroup.add(ambientLight);
 
   // 2. Primary Key Light (Neutral-White from Top-Left)
   // Reveals the raised AB lettering, beveled chamfers, and engraved metal structure
-  const keyLight = new THREE.DirectionalLight(0xfff8f0, 4.2);
+  const keyLight = new THREE.DirectionalLight(0xf2f6ff, 3.15);
   keyLight.position.set(-4.5, 5.5, 5.5);
   lightsGroup.add(keyLight);
 
   // 3. Cool-Neutral Fill Light (Front-Right)
-  const fillLight = new THREE.DirectionalLight(0x9cb4d8, 1.8);
+  const fillLight = new THREE.DirectionalLight(0xbacbe3, 1.45);
   fillLight.position.set(3.5, 3.5, 4.0);
   lightsGroup.add(fillLight);
 
   // 4. Primary Crimson Rim Light (Right-Rear Grazing Edge)
-  const primaryCrimsonRim = new THREE.PointLight(0xB90E24, 9.5, 22, 1.4);
+  const primaryCrimsonRim = new THREE.PointLight(0x9aaecb, 5.8, 22, 1.4);
   primaryCrimsonRim.position.set(4.5, -2.5, 3.2);
   lightsGroup.add(primaryCrimsonRim);
 
   // 5. Secondary Crimson Accent Point Light (Bottom-Left)
-  const secondaryCrimsonRim = new THREE.PointLight(0xC1121F, 5.5, 18, 1.5);
+  const secondaryCrimsonRim = new THREE.PointLight(0xC1121F, 2.0, 18, 1.5);
   secondaryCrimsonRim.position.set(-3.8, -3.2, 2.0);
   lightsGroup.add(secondaryCrimsonRim);
 
   // 6. Reverse Face Fill Light (Back-Top-Center)
-  const reverseKeyLight = new THREE.DirectionalLight(0xe2e6f4, 3.5);
+  const reverseKeyLight = new THREE.DirectionalLight(0xcbd9ed, 2.15);
   reverseKeyLight.position.set(0, 4.0, -6.5);
   lightsGroup.add(reverseKeyLight);
 
   // 7. Atmospheric Crimson Back Halo
-  const backHaloLight = new THREE.PointLight(0x780000, 7.0, 20, 1.8);
+  const backHaloLight = new THREE.PointLight(0x1c2637, 3.8, 20, 1.8);
   backHaloLight.position.set(0, 0, -4.0);
   lightsGroup.add(backHaloLight);
 
@@ -69,9 +69,9 @@ export function setupEmblemLighting(scene) {
     // Breathing pulse
     const pulse = Math.sin(time * 1.4) * 0.12;
 
-    primaryCrimsonRim.intensity = 9.5 + pulse * 2.0 + hoverLerp * 3.5;
-    keyLight.intensity = 4.2 + hoverLerp * 1.2;
-    fillLight.intensity = 1.8 + hoverLerp * 0.6;
+    primaryCrimsonRim.intensity = 5.8 + pulse * 0.9 + hoverLerp * 1.6;
+    keyLight.intensity = 3.15 + hoverLerp * 0.45;
+    fillLight.intensity = 1.45 + hoverLerp * 0.15;
   };
 
   const dispose = () => {

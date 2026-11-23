@@ -19,7 +19,7 @@ export default function ChapterTransition() {
         <motion.div
           initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ once: false, amount: 0.1 }}
           style={{ originX: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full bg-gradient-to-r from-transparent via-[#C1121F]/80 to-transparent shadow-[0_0_8px_#C1121F]"

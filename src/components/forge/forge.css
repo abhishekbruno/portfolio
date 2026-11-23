@@ -1,0 +1,401 @@
+/* ==========================================================================
+   THE FORGE — FROM CONCEPT TO EXECUTION
+   Neo-Noir Cinematic Engineering Environment Styles
+   Scoped Typography System: Syne (800), Space Grotesk (700), Manrope (400-500), IBM Plex Mono (500)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+  --forge-bg: #07070a;
+  --forge-surface: #0e1117;
+  --forge-surface-elevated: #131722;
+  --forge-surface-hover: #1a202c;
+  --forge-border: #1f2633;
+  --forge-border-subtle: #161c26;
+  --forge-border-crimson: #c1121f;
+  --forge-crimson: #c1121f;
+  --forge-crimson-bright: #ff3b4b;
+  --forge-crimson-glow: rgba(193, 18, 31, 0.38);
+  --forge-crimson-dim: rgba(193, 18, 31, 0.12);
+  --forge-silver: #cbd5e1;
+  --forge-silver-dim: #64748b;
+  --forge-silver-highlight: #f8fafc;
+  --forge-charcoal: #181d28;
+  --forge-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Distinctive Scoped Typography System */
+  --font-forge-hero: 'Syne', sans-serif;
+  --font-forge-heading: 'Space Grotesk', sans-serif;
+  --font-forge-body: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-forge-mono: 'IBM Plex Mono', monospace;
+}
+
+/* Master Forge Section Container */
+.forge-section {
+  position: relative;
+  background-color: var(--forge-bg);
+  color: var(--forge-silver-highlight);
+  font-family: var(--font-forge-body);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Industrial Precision Grid Pattern */
+.forge-grid-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 50%, #000 35%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 50%, #000 35%, transparent 85%);
+}
+
+/* Thermal Forge Crimson Glow */
+.forge-heat-flare {
+  position: absolute;
+  top: 8%;
+  left: -15%;
+  width: 70vw;
+  max-width: 900px;
+  height: 900px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(193, 18, 31, 0.18) 0%,
+    rgba(120, 0, 0, 0.08) 40%,
+    transparent 70%
+  );
+  filter: blur(55px);
+  z-index: 1;
+}
+
+.forge-silver-flare {
+  position: absolute;
+  bottom: 12%;
+  right: -10%;
+  width: 55vw;
+  max-width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(203, 213, 225, 0.05) 0%,
+    rgba(30, 41, 59, 0.03) 50%,
+    transparent 75%
+  );
+  filter: blur(60px);
+  z-index: 1;
+}
+
+/* Atmospheric Vignette */
+.forge-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(5, 5, 8, 0.75) 85%,
+    #050508 100%
+  );
+  z-index: 2;
+}
+
+/* ==========================================================================
+   COMPLETE TYPOGRAPHY REDESIGN
+   ========================================================================== */
+
+/* Main Cinematic Headlines: Syne ExtraBold (800) */
+.forge-font-hero {
+  font-family: var(--font-forge-hero);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+/* Fluid Hero Sizing: Desktop 76-116px, Tablet 54-76px, Mobile 38-54px */
+.forge-hero-text {
+  font-size: clamp(2.375rem, 8.8vw, 3.375rem); /* Mobile 38-54px */
+}
+
+@media (min-width: 640px) {
+  .forge-hero-text {
+    font-size: clamp(3.375rem, 6.2vw, 4.75rem); /* Tablet 54-76px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .forge-hero-text {
+    font-size: clamp(4.75rem, 7.8vw, 7.25rem); /* Desktop 76-116px */
+  }
+}
+
+.forge-headline-offwhite {
+  color: #f8fafc;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+}
+
+.forge-headline-crimson {
+  color: var(--forge-crimson);
+  text-shadow:
+    0 0 35px rgba(193, 18, 31, 0.45),
+    0 4px 24px rgba(0, 0, 0, 0.95);
+}
+
+/* Cinematic Shimmer Sweep across Crimson text */
+.forge-crimson-sweep {
+  background: linear-gradient(
+    105deg,
+    #c1121f 0%,
+    #ff4455 35%,
+    #ffffff 50%,
+    #ff4455 65%,
+    #c1121f 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: forgeShimmerSweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes forgeShimmerSweep {
+  0% {
+    background-position: 250% 0;
+  }
+  40% {
+    background-position: -50% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+/* Secondary Headings: Space Grotesk (600–700) */
+.forge-font-heading {
+  font-family: var(--font-forge-heading);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.forge-chapter-title {
+  font-size: clamp(2.25rem, 4.2vw, 3.75rem); /* Major chapter titles: 36-60px */
+}
+
+.forge-supporting-title {
+  font-size: clamp(1.375rem, 2vw, 1.875rem); /* Supporting titles: 22-30px */
+}
+
+/* Body Typography: Manrope (400–500) */
+.forge-font-body {
+  font-family: var(--font-forge-body);
+  font-size: clamp(1rem, 1.1vw, 1.125rem); /* 16-18px */
+  line-height: 1.68;
+  color: #94a3b8;
+}
+
+/* Technical Labels: IBM Plex Mono (400–500) */
+.forge-font-mono {
+  font-family: var(--font-forge-mono);
+  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem); /* 11-13px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Headline Mask Container */
+.forge-mask-container {
+  overflow: hidden;
+  display: block;
+}
+
+/* Word & Character Stagger Token */
+.forge-text-token {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   3D ARCHITECTURAL ENGINEERING ASSEMBLY STAGE
+   ========================================================================== */
+
+.forge-stage-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  perspective: 1400px;
+}
+
+.forge-stage-perspective {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.35s var(--forge-ease);
+  will-change: transform;
+}
+
+.forge-svg-container {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85));
+}
+
+/* Stage Step Card Containers */
+.forge-step-card {
+  position: relative;
+  background-color: var(--forge-surface);
+  border: 1px solid var(--forge-border);
+  padding: 1.75rem 2rem;
+  transition: all 0.3s var(--forge-ease);
+  backdrop-filter: blur(8px);
+}
+
+.forge-step-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0%;
+  background-color: var(--forge-crimson);
+  box-shadow: 0 0 12px var(--forge-crimson);
+  transition: height 0.35s var(--forge-ease);
+}
+
+.forge-step-card.active::before {
+  height: 100%;
+}
+
+.forge-step-card.active {
+  border-color: rgba(193, 18, 31, 0.5);
+  background-color: var(--forge-surface-elevated);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.8),
+    0 0 25px -5px var(--forge-crimson-dim);
+}
+
+.forge-step-card:hover {
+  border-color: rgba(193, 18, 31, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Real Project Showcase Card inside Stages */
+.forge-project-card {
+  display: block;
+  background: linear-gradient(135deg, rgba(14, 17, 23, 0.95) 0%, rgba(19, 23, 34, 0.85) 100%);
+  border: 1px solid var(--forge-border);
+  padding: 1.25rem 1.5rem;
+  transition: all 0.25s var(--forge-ease);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.forge-project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.forge-project-card:hover::after {
+  transform: translateX(100%);
+}
+
+.forge-project-card:hover {
+  border-color: var(--forge-crimson);
+  box-shadow: 0 0 20px rgba(193, 18, 31, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Timeline vertical rail */
+.forge-timeline-rail {
+  position: absolute;
+  left: 23px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(193, 18, 31, 0.8) 0%,
+    rgba(31, 38, 51, 0.5) 50%,
+    rgba(193, 18, 31, 0.8) 100%
+  );
+}
+
+/* Technical Specification Pill */
+.forge-tech-pill {
+  font-family: var(--font-forge-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.625rem;
+  background-color: rgba(14, 17, 23, 0.8);
+  border: 1px solid rgba(31, 38, 51, 0.9);
+  color: #94a3b8;
+  border-radius: 0px;
+  transition: all 0.2s ease;
+}
+
+.forge-project-card:hover .forge-tech-pill {
+  border-color: rgba(193, 18, 31, 0.35);
+  color: #f1f5f9;
+}
+
+/* Interactive HUD Tooltip on Assembly hover */
+.forge-hud-tooltip {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(10, 13, 18, 0.94);
+  border: 1px solid var(--forge-crimson);
+  padding: 0.625rem 1.125rem;
+  font-family: var(--font-forge-mono);
+  color: #f1f5f9;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  z-index: 20;
+}
+
+/* Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  .forge-stage-perspective {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .forge-crimson-sweep {
+    animation: none !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--forge-crimson) !important;
+  }
+
+  .forge-project-card::after {
+    display: none !important;
+  }
+
+  .forge-step-card {
+    transition: none !important;
+    transform: none !important;
+  }
+}

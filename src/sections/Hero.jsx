@@ -8,7 +8,7 @@ import CinematicHeroLighting from '../components/hero/CinematicHeroLighting';
 // Code-split Three.js interactive 3D AB Medallion centerpiece
 const InteractiveEmblem3D = lazy(() => import('../components/hero/InteractiveEmblem3D'));
 
-export default function Hero() {
+export default function Hero({ onSceneReady }) {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -119,8 +119,8 @@ export default function Hero() {
         style={{ y: yEmblemCanvas }}
         className="absolute inset-0 z-10 w-full h-full pointer-events-auto"
       >
-        <Suspense fallback={null}>
-          <InteractiveEmblem3D />
+        <Suspense fallback={<div className="absolute right-0 top-0 flex h-full w-[55%] items-center justify-center pointer-events-none" aria-hidden="true"><div className="h-40 w-40 animate-pulse rounded-full border border-[#75808a]/40 shadow-[0_0_50px_rgba(120,135,155,.12)]" /></div>}>
+          <InteractiveEmblem3D onReady={onSceneReady} />
         </Suspense>
       </motion.div>
 

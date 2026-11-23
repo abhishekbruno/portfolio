@@ -61,7 +61,7 @@ export default function GithubSection() {
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.5 }}
           className="mb-10 p-4 border border-[#292929] bg-[#111111] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
         >
@@ -95,7 +95,7 @@ export default function GithubSection() {
               key={item.label}
               initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{
                 duration: 0.5,
                 delay: idx * 0.08,
@@ -121,7 +121,7 @@ export default function GithubSection() {
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8"
         >
@@ -171,7 +171,7 @@ export default function GithubSection() {
                 key={repo.name}
                 initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={{ once: false, amount: 0.15 }}
                 transition={{
                   duration: 0.6,
                   delay: idx * 0.08,
@@ -237,7 +237,7 @@ export default function GithubSection() {
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="mt-14 p-8 border border-[#292929] bg-[#111111] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6"
         >

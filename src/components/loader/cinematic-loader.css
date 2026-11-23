@@ -1,0 +1,559 @@
+/* ==========================================================================
+   THE CONTRACT — CINEMATIC LOADING EXPERIENCE STYLES
+   Neo-Noir, Brushed Silver & Gunmetal, Restrained Crimson, John Wick Inspired
+   ========================================================================== */
+
+:root {
+  --loader-bg-obsidian: #050608;
+  --loader-bg-void: #020304;
+  --loader-crimson: #c1121f;
+  --loader-crimson-deep: #780000;
+  --loader-crimson-glow: rgba(193, 18, 31, 0.35);
+  --loader-silver-light: #f1f5f9;
+  --loader-silver-mid: #94a3b8;
+  --loader-silver-dark: #334155;
+  --loader-gunmetal: #0f1319;
+  --loader-gunmetal-light: #1e2530;
+  --loader-border-subtle: rgba(148, 163, 184, 0.14);
+  --loader-ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --loader-ease-sharp: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Master full-bleed overlay container */
+.the-contract-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* Split-panel shutter container */
+.the-contract-shutter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.the-contract-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50.5%; /* slight overlap prevents 1px gap */
+  background: radial-gradient(circle at center, #07090d 0%, #040507 70%, #020204 100%);
+  pointer-events: auto;
+  transition: transform 0.68s var(--loader-ease-cinematic);
+  will-change: transform;
+}
+
+.the-contract-panel--top {
+  top: 0;
+  transform-origin: top center;
+  border-bottom: 1px solid rgba(193, 18, 31, 0.2);
+}
+
+.the-contract-panel--bottom {
+  bottom: 0;
+  transform-origin: bottom center;
+  border-top: 1px solid rgba(193, 18, 31, 0.2);
+}
+
+/* When reveal triggers: shutter opens */
+.the-contract-loader--reveal .the-contract-panel--top {
+  transform: translateY(-100%);
+}
+
+.the-contract-loader--reveal .the-contract-panel--bottom {
+  transform: translateY(100%);
+}
+
+.the-contract-loader--reveal .the-contract-stage {
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.42s ease, transform 0.45s var(--loader-ease-cinematic);
+  pointer-events: none;
+}
+
+/* Stage content layer (centered in middle of both panels) */
+.the-contract-stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem 1.5rem;
+  transition: opacity 0.3s ease;
+}
+
+/* Ambient Crimson Bleed from Left (Phase 1) */
+.the-contract-crimson-bleed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 55vw;
+  max-width: 700px;
+  background: radial-gradient(
+    ellipse 85% 75% at 0% 50%,
+    rgba(193, 18, 31, 0.24) 0%,
+    rgba(120, 0, 0, 0.12) 42%,
+    rgba(193, 18, 31, 0.03) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  animation: crimsonBleedEmerge 1.8s var(--loader-ease-cinematic) forwards 0.2s;
+}
+
+@keyframes crimsonBleedEmerge {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Subtle atmospheric smoke layer */
+.the-contract-smoke {
+  position: absolute;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(255, 255, 255, 0.018) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 65%, rgba(193, 18, 31, 0.035) 0%, transparent 65%);
+  animation: smokeDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes smokeDrift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-2%, 1.5%) scale(1.03);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(1.5%, -1.5%) scale(1);
+    opacity: 0.6;
+  }
+}
+
+/* Central Silver Horizon Reticle Line (Phase 1) */
+.the-contract-horizon-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(680px, 88vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(148, 163, 184, 0.05) 15%,
+    rgba(226, 232, 240, 0.45) 45%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(226, 232, 240, 0.45) 55%,
+    rgba(148, 163, 184, 0.05) 85%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  animation: horizonLineEmerge 1.2s var(--loader-ease-cinematic) forwards 0.28s;
+}
+
+@keyframes horizonLineEmerge {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1);
+  }
+}
+
+/* Master Vignette Frame */
+.the-contract-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    transparent 35%,
+    rgba(3, 4, 6, 0.6) 75%,
+    rgba(1, 2, 3, 0.96) 100%
+  );
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+}
+
+/* Minimal Geometric Target Corner Reticles */
+.the-contract-reticle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(148, 163, 184, 0.3);
+  pointer-events: none;
+}
+.the-contract-reticle--tl {
+  top: 24px;
+  left: 24px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.the-contract-reticle--tr {
+  top: 24px;
+  right: 24px;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.the-contract-reticle--bl {
+  bottom: 24px;
+  left: 24px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.the-contract-reticle--br {
+  bottom: 24px;
+  right: 24px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* 3D Falling Coin Stage */
+.the-contract-3d-coin-stage {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  height: clamp(280px, 42vh, 480px);
+  margin: 0 auto;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .the-contract-3d-coin-stage {
+    height: clamp(340px, 46vh, 520px);
+  }
+}
+
+/* Fallback Container for Reduced Motion / No WebGL */
+.the-contract-fallback-wrap {
+  position: relative;
+  width: 100%;
+  height: clamp(220px, 32vh, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+/* Medallion Insignia Container (Legacy / Fallback) */
+.the-contract-insignia-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin-bottom: 1.75rem;
+  perspective: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .the-contract-insignia-wrap {
+    width: 190px;
+    height: 190px;
+    margin-bottom: 2rem;
+  }
+}
+
+.the-contract-insignia-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: insigniaSubtleTilt 9s ease-in-out infinite alternate;
+}
+
+@keyframes insigniaSubtleTilt {
+  0% {
+    transform: rotateX(3deg) rotateY(-4deg) rotateZ(0deg);
+  }
+  50% {
+    transform: rotateX(-3deg) rotateY(4deg) rotateZ(1deg);
+  }
+  100% {
+    transform: rotateX(3deg) rotateY(-3deg) rotateZ(-0.5deg);
+  }
+}
+
+/* Moving Specular Sheen across the Medallion */
+.the-contract-metallic-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.the-contract-metallic-sheen::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.03) 44%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.04) 56%,
+    transparent 62%
+  );
+  transform: translateX(-120%) rotate(25deg);
+  animation: metallicSheenGlide 3.6s var(--loader-ease-sharp) infinite;
+}
+
+@keyframes metallicSheenGlide {
+  0% {
+    transform: translateX(-130%) rotate(25deg);
+  }
+  45%, 100% {
+    transform: translateX(130%) rotate(25deg);
+  }
+}
+
+/* Final highlight pulse on the Insignia */
+.the-contract-insignia--ready-flash::after {
+  animation: readyFlash 0.55s ease-out forwards;
+}
+
+@keyframes readyFlash {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* Masked Vertical Reveal for Typography */
+.the-contract-line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.the-contract-title {
+  font-family: 'Bebas Neue', 'Oswald', sans-serif;
+  letter-spacing: 0.05em;
+  line-height: 0.88;
+  color: #f1f5f9;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85), 0 0 35px rgba(226, 232, 240, 0.12);
+}
+
+.the-contract-subtitle {
+  font-family: 'Oswald', 'Inter', sans-serif;
+  letter-spacing: 0.32em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.the-contract-label {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.24em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+/* Horizontal Progress Line */
+.the-contract-progress-track {
+  position: relative;
+  width: min(300px, 78vw);
+  height: 2px;
+  background: rgba(30, 37, 48, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  overflow: hidden;
+}
+
+.the-contract-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #780000 0%,
+    #c1121f 50%,
+    #e2e8f0 95%,
+    #ffffff 100%
+  );
+  box-shadow: 0 0 12px rgba(193, 18, 31, 0.8);
+  transition: width 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Indeterminate sweep along the progress line while awaiting 3D ready */
+.the-contract-progress-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(193, 18, 31, 0.4) 30%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(193, 18, 31, 0.4) 70%,
+    transparent 100%
+  );
+  animation: progressSweep 1.6s ease-in-out infinite;
+}
+
+@keyframes progressSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+/* Skip Intro Button */
+.the-contract-skip-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(11, 14, 19, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: #94a3b8;
+  text-transform: uppercase;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.22s ease;
+}
+
+.the-contract-skip-btn:hover,
+.the-contract-skip-btn:focus-visible {
+  border-color: #c1121f;
+  color: #f1f5f9;
+  background: rgba(22, 18, 22, 0.9);
+  box-shadow: 0 0 16px rgba(193, 18, 31, 0.35);
+  transform: translateY(-1px);
+}
+
+.the-contract-skip-btn:active {
+  transform: translateY(0);
+}
+
+/* Audio Toggle Control (Optional, Default Muted) */
+.the-contract-audio-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(11, 14, 19, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #64748b;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.the-contract-audio-btn:hover {
+  border-color: rgba(193, 18, 31, 0.5);
+  color: #cbd5e1;
+}
+
+.the-contract-audio-btn--active {
+  border-color: #c1121f;
+  color: #f1f5f9;
+}
+
+/* Top Telemetry Watermark */
+.the-contract-top-telemetry {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: #475569;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Reduced Motion Mode Override */
+@media (prefers-reduced-motion: reduce) {
+  .the-contract-panel {
+    transition: opacity 0.15s ease !important;
+  }
+  .the-contract-loader--reveal .the-contract-panel--top,
+  .the-contract-loader--reveal .the-contract-panel--bottom {
+    transform: none !important;
+    opacity: 0 !important;
+  }
+  .the-contract-crimson-bleed,
+  .the-contract-smoke,
+  .the-contract-horizon-line,
+  .the-contract-insignia-inner,
+  .the-contract-metallic-sheen::after,
+  .the-contract-progress-sweep {
+    animation: none !important;
+    transform: none !important;
+  }
+  .the-contract-progress-fill {
+    transition: none !important;
+  }
+  .the-contract-line-mask > * {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

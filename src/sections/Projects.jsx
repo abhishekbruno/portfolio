@@ -45,7 +45,7 @@ export default function Projects() {
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.5 }}
           className="flex flex-wrap items-center gap-1.5 mb-12"
         >
@@ -75,7 +75,7 @@ export default function Projects() {
                 key={project.id}
                 initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={{ once: false, amount: 0.15 }}
                 transition={{
                   duration: 0.65,
                   delay: idx * 0.08,
@@ -177,7 +177,7 @@ export default function Projects() {
         <motion.div
           initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.5 }}
           className="mt-14 text-center"
         >

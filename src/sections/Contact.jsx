@@ -108,7 +108,7 @@ export default function Contact() {
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 space-y-6"
           >
@@ -192,7 +192,7 @@ export default function Contact() {
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.65, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7"
           >
@@ -201,7 +201,7 @@ export default function Contact() {
               <motion.div
                 initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: false, amount: 0.2 }}
                 style={{ originX: 0 }}
                 transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute top-0 left-0 right-0 h-[2px] bg-[#C1121F] shadow-[0_0_8px_#C1121F]"

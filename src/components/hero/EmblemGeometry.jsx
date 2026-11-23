@@ -21,28 +21,39 @@ export function createStudioEnvironmentMap(renderer) {
 
   // 1. Deep charcoal-black background
   const baseGrad = ctx.createLinearGradient(0, 0, 0, height);
-  baseGrad.addColorStop(0, '#0c0d12');
-  baseGrad.addColorStop(0.5, '#07080a');
-  baseGrad.addColorStop(1, '#050506');
+  baseGrad.addColorStop(0, '#12161d');
+  baseGrad.addColorStop(0.5, '#090d13');
+  baseGrad.addColorStop(1, '#05070b');
   ctx.fillStyle = baseGrad;
   ctx.fillRect(0, 0, width, height);
 
   // 2. Primary Top-Left Overhead Studio Softbox (High-specular white-warm highlight)
   const softbox1 = ctx.createRadialGradient(280, 120, 10, 280, 120, 220);
-  softbox1.addColorStop(0, 'rgba(255, 252, 245, 0.95)');
-  softbox1.addColorStop(0.25, 'rgba(230, 235, 245, 0.7)');
-  softbox1.addColorStop(0.6, 'rgba(150, 160, 180, 0.25)');
+  softbox1.addColorStop(0, 'rgba(248, 251, 255, 0.97)');
+  softbox1.addColorStop(0.25, 'rgba(215, 224, 240, 0.84)');
+  softbox1.addColorStop(0.6, 'rgba(158, 176, 197, 0.28)');
   softbox1.addColorStop(1, 'transparent');
   ctx.fillStyle = softbox1;
   ctx.fillRect(0, 0, width, height);
 
   // 3. Secondary Cool-Neutral Rim Softbox (Right/Rear fill)
   const softbox2 = ctx.createRadialGradient(780, 180, 10, 780, 180, 190);
-  softbox2.addColorStop(0, 'rgba(180, 205, 240, 0.65)');
-  softbox2.addColorStop(0.5, 'rgba(120, 145, 180, 0.2)');
+  softbox2.addColorStop(0, 'rgba(232, 241, 255, 0.78)');
+  softbox2.addColorStop(0.5, 'rgba(145, 165, 196, 0.24)');
   softbox2.addColorStop(1, 'transparent');
   ctx.fillStyle = softbox2;
   ctx.fillRect(0, 0, width, height);
+
+  // Narrow vertical photographer's strip lights: animated by the physical rotation.
+  // Unlike flat metallic paint these create moving specular bands on the coin.
+  const warmStrip = ctx.createLinearGradient(480, 0, 565, 0);
+  warmStrip.addColorStop(0, 'rgba(235,243,255,0)');
+  warmStrip.addColorStop(0.3, 'rgba(224,234,247,0.35)');
+  warmStrip.addColorStop(0.51, 'rgba(250,253,255,0.82)');
+  warmStrip.addColorStop(0.73, 'rgba(201,215,232,0.3)');
+  warmStrip.addColorStop(1, 'rgba(235,243,255,0)');
+  ctx.fillStyle = warmStrip;
+  ctx.fillRect(480, 46, 85, 255);
 
   // 4. John Wick Signature Crimson Reflection Strip (Grazing Rim Light from Right/Bottom)
   const redStrip = ctx.createRadialGradient(880, 340, 15, 880, 340, 240);
@@ -83,8 +94,8 @@ export function createStudioEnvironmentMap(renderer) {
  * - Subtle brushed metal scratches and micro-grain
  * - Crosshair reticle lines behind monogram
  */
-function createFrontCoinTexture() {
-  const size = 2048;
+function createFrontCoinTexture(quality = 1536) {
+  const size = quality;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -98,11 +109,11 @@ function createFrontCoinTexture() {
 
   // 1. Dark weathered gunmetal base with radial brushed metallic sheen
   const grad = ctx.createRadialGradient(cx, cy, size * 0.04, cx, cy, size * 0.48);
-  grad.addColorStop(0, '#2c2c34');
-  grad.addColorStop(0.35, '#22222a');
-  grad.addColorStop(0.7, '#16161c');
-  grad.addColorStop(0.92, '#0f0f14');
-  grad.addColorStop(1, '#08080a');
+  grad.addColorStop(0, '#59616c');
+  grad.addColorStop(0.35, '#454e5b');
+  grad.addColorStop(0.7, '#333b46');
+  grad.addColorStop(0.92, '#252b35');
+  grad.addColorStop(1, '#11161e');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, size, size);
 
@@ -111,7 +122,7 @@ function createFrontCoinTexture() {
   for (let i = 0; i < 600; i++) {
     const angle = Math.random() * Math.PI * 2;
     const len = 40 + Math.random() * 260;
-    const dist = Math.random() * rOuter;
+    const dist = 20 + Math.random() * (rOuter - 20);
     ctx.beginPath();
     ctx.arc(cx, cy, dist, angle, angle + len / dist);
     ctx.strokeStyle = Math.random() > 0.45 ? 'rgba(255,255,255,0.035)' : 'rgba(0,0,0,0.06)';
@@ -133,7 +144,7 @@ function createFrontCoinTexture() {
   ringDistances.forEach((r, idx) => {
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = idx % 2 === 0 ? 'rgba(255, 255, 255, 0.16)' : 'rgba(0, 0, 0, 0.7)';
+    ctx.strokeStyle = idx % 2 === 0 ? 'rgba(188, 204, 224, 0.34)' : 'rgba(0, 0, 0, 0.7)';
     ctx.lineWidth = idx === 0 || idx === 5 ? 5 : 2.5;
     ctx.stroke();
   });
@@ -153,7 +164,7 @@ function createFrontCoinTexture() {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = isMajor ? 'rgba(240, 240, 250, 0.45)' : 'rgba(255, 255, 255, 0.18)';
+    ctx.strokeStyle = isMajor ? 'rgba(217, 227, 241, 0.64)' : 'rgba(162, 179, 204, 0.35)';
     ctx.lineWidth = isMajor ? 3 : 1.5;
     ctx.stroke();
   }
@@ -209,9 +220,9 @@ function createFrontCoinTexture() {
 
       // Subdued metallic silver lettering with slight crimson reflection
       const charGrad = ctx.createLinearGradient(-15, -15, 15, 15);
-      charGrad.addColorStop(0, '#f0f0f5');
-      charGrad.addColorStop(0.5, '#c8c8d2');
-      charGrad.addColorStop(1, '#9a9aa4');
+      charGrad.addColorStop(0, '#edf1f7');
+      charGrad.addColorStop(0.5, '#b7c1cf');
+      charGrad.addColorStop(1, '#738091');
       ctx.fillStyle = charGrad;
       ctx.fillText(char, 0, 0);
 
@@ -259,7 +270,7 @@ function createFrontCoinTexture() {
       ctx.rotate(theta + (flip ? -0.42 : 0.42));
       ctx.beginPath();
       ctx.ellipse(0, 0, 18, 7, 0.38, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(215, 215, 225, 0.75)';
+      ctx.fillStyle = 'rgba(170, 183, 202, 0.73)';
       ctx.fill();
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.65)';
       ctx.lineWidth = 1.5;
@@ -281,8 +292,8 @@ function createFrontCoinTexture() {
 /**
  * Generates procedural canvas bump/height map for rich metallic surface relief
  */
-function createFrontBumpTexture() {
-  const size = 1024;
+function createFrontBumpTexture(quality = 768) {
+  const size = quality;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -327,8 +338,8 @@ function createFrontBumpTexture() {
  * - Concentric circular machining marks and radial sunburst brushed metal
  * - Technical inscribed typography: "// VERIFIED UNDERWORLD ARCHITECTURE //"
  */
-function createBackCoinTexture() {
-  const size = 1024;
+function createBackCoinTexture(quality = 768) {
+  const size = quality;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -339,10 +350,10 @@ function createBackCoinTexture() {
 
   // Dark weathered metal reverse base with subtle radial brushed sheen
   const grad = ctx.createRadialGradient(cx, cy, 30, cx, cy, size * 0.5);
-  grad.addColorStop(0, '#22222a');
-  grad.addColorStop(0.4, '#181820');
-  grad.addColorStop(0.8, '#101014');
-  grad.addColorStop(1, '#060608');
+  grad.addColorStop(0, '#454e5b');
+  grad.addColorStop(0.4, '#303944');
+  grad.addColorStop(0.8, '#1c232d');
+  grad.addColorStop(1, '#0f141b');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, size, size);
 
@@ -362,21 +373,21 @@ function createBackCoinTexture() {
   [size * 0.44, size * 0.38, size * 0.30, size * 0.20, size * 0.12].forEach((r, idx) => {
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = idx === 0 ? 'rgba(193, 18, 31, 0.5)' : 'rgba(255, 255, 255, 0.16)';
+    ctx.strokeStyle = idx === 0 ? 'rgba(210, 222, 238, 0.60)' : 'rgba(188, 204, 224, 0.34)';
     ctx.lineWidth = idx === 0 ? 4 : 2;
     ctx.stroke();
   });
 
   // Central Reverse AB Monogram Silhouette
   ctx.font = '700 80px "Oswald", "Bebas Neue", sans-serif';
-  ctx.fillStyle = 'rgba(180, 180, 195, 0.8)';
+  ctx.fillStyle = 'rgba(203, 214, 229, 0.85)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('AB', cx, cy - 10);
 
   // Technical reverse cipher text
   ctx.font = '600 20px "JetBrains Mono", monospace';
-  ctx.fillStyle = '#a0a0ae';
+  ctx.fillStyle = '#bdc7d5';
   ctx.fillText('// VERIFIED UNDERWORLD CIPHER //', cx, cy - 130);
   ctx.fillText('ABHISHEK BRUNO • SYSTEMS', cx, cy + 110);
   ctx.fillText('EST. 2026 // CSE ARCHITECTURE', cx, cy + 140);
@@ -384,6 +395,40 @@ function createBackCoinTexture() {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
+}
+
+/**
+ * Subtle micro-finish variation. Roughness, bump and the high-contrast
+ * environment contribute independently to realistic brushed-steel and black-chrome surfaces.
+ */
+function createBrushedMetalRoughnessTexture(quality = 512) {
+  const size = quality;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#e6e6e6';
+  ctx.fillRect(0, 0, size, size);
+  let seed = 2026;
+  const rnd = () => {
+    seed = (1664525 * seed + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  const cx = size / 2;
+  const cy = size / 2;
+  for (let i = 0; i < 1750; i++) {
+    const a = rnd() * Math.PI * 2;
+    const r = (0.08 + rnd() * 0.43) * size;
+    const sweep = 0.003 + rnd() * 0.11;
+    const v = Math.floor(174 + rnd() * 75);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, a, a + sweep);
+    ctx.strokeStyle = `rgba(${v},${v},${v},${0.09 + rnd() * 0.22})`;
+    ctx.lineWidth = 0.4 + rnd() * 0.8;
+    ctx.stroke();
+  }
+  const map = new THREE.CanvasTexture(canvas);
+  map.anisotropy = 4;
+  return map;
 }
 
 /**
@@ -478,20 +523,20 @@ function createExtrudedABMonogram() {
   geoB.center();
 
   // ── Multi-Material for the Monogram ──
-  // Material 0: Front face - Brushed luxury gunmetal with vivid highlight (#929299)
+  // Material 0: Front face - Brushed silver with vivid highlight (#929299)
   const faceMat = new THREE.MeshStandardMaterial({
-    color: 0x929299,
-    metalness: 0.92,
-    roughness: 0.18,
-    envMapIntensity: 2.2
+    color: 0xa7adb6,
+    metalness: 1.0,
+    roughness: 0.32,
+    envMapIntensity: 1.9
   });
 
   // Material 1: Bevel & Sidewalls - Dark structural gunmetal (#18181C)
   const sideMat = new THREE.MeshStandardMaterial({
-    color: 0x18181c,
-    metalness: 0.95,
-    roughness: 0.34,
-    envMapIntensity: 1.4
+    color: 0x333a46,
+    metalness: 1.0,
+    roughness: 0.27,
+    envMapIntensity: 1.6
   });
 
   const monogramMaterials = [faceMat, sideMat];
@@ -531,45 +576,49 @@ function createExtrudedABMonogram() {
  * - Layer 4: Four embedded, sleek recessed crimson illuminated sight inserts
  * - Layer 5: High-contrast, extruded and beveled 'AB' Monogram
  */
-export function createEmblemGroup() {
+export function createEmblemGroup({ textureQuality = 'desktop' } = {}) {
   const masterGroup = new THREE.Group();
 
   // Textures
-  const frontTexture = createFrontCoinTexture();
-  const frontBump = createFrontBumpTexture();
-  const backTexture = createBackCoinTexture();
+  const desktop = textureQuality === 'desktop';
+  const frontTexture = createFrontCoinTexture(desktop ? 1536 : 768);
+  const frontBump = createFrontBumpTexture(desktop ? 768 : 384);
+  const backTexture = createBackCoinTexture(desktop ? 768 : 384);
+  const brushedRoughness = createBrushedMetalRoughnessTexture(desktop ? 512 : 256);
 
   // Materials
   const rimMetalMat = new THREE.MeshStandardMaterial({
-    color: 0x36363c,
-    metalness: 0.94,
-    roughness: 0.22,
-    envMapIntensity: 2.0
+    color: 0xb8bec7,
+    metalness: 1.0,
+    roughness: 0.20,
+    envMapIntensity: 1.95
   });
 
   const frontFaceMat = new THREE.MeshStandardMaterial({
     map: frontTexture,
     bumpMap: frontBump,
-    bumpScale: 0.07,
-    color: 0xefeff5,
-    metalness: 0.90,
-    roughness: 0.24,
-    envMapIntensity: 1.8
+    bumpScale: 0.036,
+    roughnessMap: brushedRoughness,
+    color: 0xffffff,
+    metalness: 1.0,
+    roughness: 0.29,
+    envMapIntensity: 1.95
   });
 
   const backFaceMat = new THREE.MeshStandardMaterial({
     map: backTexture,
-    color: 0xd0d0d8,
+    roughnessMap: brushedRoughness,
+    color: 0xffffff,
     metalness: 0.92,
-    roughness: 0.28,
-    envMapIntensity: 1.6
+    roughness: 0.36,
+    envMapIntensity: 1.9
   });
 
   const edgeKnurlMat = new THREE.MeshStandardMaterial({
-    color: 0x1e1e22,
-    metalness: 0.96,
-    roughness: 0.40,
-    envMapIntensity: 1.5
+    color: 0x303741,
+    metalness: 1.0,
+    roughness: 0.29,
+    envMapIntensity: 1.80
   });
 
   // ─── 1. Thick Medallion Core Cylinder ───
@@ -595,13 +644,54 @@ export function createEmblemGroup() {
   midRimMesh.position.z = coinThickness / 2 + 0.025;
   masterGroup.add(midRimMesh);
 
+  // Precision-machined polished-steel and black-titanium trim rings.
+  const polishedSteelMat = new THREE.MeshStandardMaterial({
+    color: 0xdce2ea, metalness: 1, roughness: 0.19, envMapIntensity: 2.0
+  });
+  const darkTitaniumMat = new THREE.MeshStandardMaterial({
+    color: 0x444e5b, metalness: 1, roughness: 0.42, envMapIntensity: 1.5
+  });
+  [
+    { r: 2.31, tube: 0.011, mat: polishedSteelMat },
+    { r: 2.15, tube: 0.013, mat: darkTitaniumMat },
+    { r: 1.79, tube: 0.011, mat: polishedSteelMat },
+    { r: 1.60, tube: 0.010, mat: darkTitaniumMat }
+  ].forEach(({ r, tube, mat }) => {
+    const geometry = new THREE.TorusGeometry(r, tube, 8, 128);
+    const front = new THREE.Mesh(geometry, mat);
+    front.position.z = coinThickness / 2 + 0.018;
+    const back = new THREE.Mesh(geometry, mat);
+    back.position.z = -coinThickness / 2 - 0.018;
+    masterGroup.add(front, back);
+  });
+
+  // 168 fine flutes are physical steel ridges on the coin edge. Instanced
+  // geometry provides convincing three-quarter views without 168 draw calls.
+  const fluteCount = 168;
+  const fluteGeo = new THREE.BoxGeometry(0.017, 0.016, 0.285);
+  const edgeFlutes = new THREE.InstancedMesh(fluteGeo, polishedSteelMat, fluteCount);
+  const fluteTransform = new THREE.Object3D();
+  for (let i = 0; i < fluteCount; i++) {
+    const a = i / fluteCount * Math.PI * 2;
+    fluteTransform.position.set(
+      Math.cos(a) * (coinRadius + 0.006),
+      Math.sin(a) * (coinRadius + 0.006),
+      0
+    );
+    fluteTransform.rotation.z = a;
+    fluteTransform.updateMatrix();
+    edgeFlutes.setMatrixAt(i, fluteTransform.matrix);
+  }
+  edgeFlutes.instanceMatrix.needsUpdate = true;
+  masterGroup.add(edgeFlutes);
+
   // ─── 3. Precision Machined Screws/Rivets around Outer Track (Front) ───
   const rivetGeo = new THREE.CylinderGeometry(0.032, 0.032, 0.045, 12);
   const rivetMat = new THREE.MeshStandardMaterial({
-    color: 0x7a7a84,
+    color: 0xbcc6d2,
     metalness: 0.96,
-    roughness: 0.18,
-    envMapIntensity: 2.2
+    roughness: 0.27,
+    envMapIntensity: 2.4
   });
 
   for (let r = 0; r < 12; r++) {

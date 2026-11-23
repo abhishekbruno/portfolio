@@ -18,7 +18,7 @@ import EmblemFallback from './EmblemFallback';
  * - Full 3-Axis (XYZ) Free Rotation with physics inertia and idle breathing drift
  * - Seamless environmental background integration with floating embers
  */
-export default function InteractiveEmblem3D() {
+export default function InteractiveEmblem3D({ onReady }) {
   const mountRef = useRef(null);
   const controlsRef = useRef(null);
   const [zAxisActive, setZAxisActive] = useState(false);
@@ -44,6 +44,11 @@ export default function InteractiveEmblem3D() {
     return () => mediaQuery.removeEventListener('change', handleMotionChange);
   }, []);
 
+  useEffect(() => {
+    // Reduced-motion and WebGL fallback are valid finished states.
+    if (reducedMotion || !hasWebGL) onReady?.();
+  }, [reducedMotion, hasWebGL, onReady]);
+
   // Sync Z-Axis mode toggle with controls
   const toggleZAxis = () => {
     setZAxisActive((prev) => {
@@ -68,6 +73,10 @@ export default function InteractiveEmblem3D() {
     if (!currentMount) return;
 
     let animationFrameId;
+    let inView = true;
+    let pageVisible = !document.hidden;
+    let lastFrameAt = 0;
+    let didRender = false;
     let width = currentMount.clientWidth || window.innerWidth;
     let height = currentMount.clientHeight || window.innerHeight;
 
@@ -84,9 +93,9 @@ export default function InteractiveEmblem3D() {
       depth: true
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width >= 1024 ? 1.3 : 1.0));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.1;
     currentMount.appendChild(renderer.domElement);
 
     // 2. High-Fidelity Studio Environment Reflection Map (Anisotropic Specular Response)
@@ -98,7 +107,7 @@ export default function InteractiveEmblem3D() {
     scene.add(positionGroup);
 
     // 4. Construct the Ultra-Detailed 3D AB Medallion Geometry & Materials
-    const emblemGroup = createEmblemGroup();
+    const emblemGroup = createEmblemGroup({ textureQuality: width >= 1024 ? 'desktop' : 'mobile' });
     positionGroup.add(emblemGroup);
 
     let basePosY = -0.05;
@@ -141,7 +150,7 @@ export default function InteractiveEmblem3D() {
     controlsRef.current = controls;
 
     // 7. Ambient Neo-Noir Floating Embers & Particle Field
-    const particleCount = 140;
+    const particleCount = width >= 1024 ? 64 : 18;
     const particleGeo = new THREE.BufferGeometry();
     const particlePos = new Float32Array(particleCount * 3);
     const particleColors = new Float32Array(particleCount * 3);
@@ -194,6 +203,7 @@ export default function InteractiveEmblem3D() {
       camera.aspect = newWidth / newHeight;
       camera.updateProjectionMatrix();
 
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, newWidth >= 1024 ? 1.3 : 1.0));
       renderer.setSize(newWidth, newHeight);
       updateEmblemLayout(newWidth, newHeight);
       ambientRing.position.set(positionGroup.position.x, positionGroup.position.y, -2.5);
@@ -201,41 +211,43 @@ export default function InteractiveEmblem3D() {
 
     window.addEventListener('resize', handleResize);
 
-    // 10. Animation Loop
+    // 10. Viewport-aware, frame-capped animation loop. The old code drew a
+    // full-DPR WebGL frame 60 times a second even after scrolling to Skills.
     const clock = new THREE.Clock();
-
-    const animate = () => {
+    const frameInterval = width >= 1024 ? 1000 / 60 : 1000 / 30;
+    const animate = (now = 0) => {
       animationFrameId = requestAnimationFrame(animate);
-
+      if (!inView || !pageVisible) return;
+      if (didRender && now - lastFrameAt < frameInterval) return;
+      lastFrameAt = now;
       const elapsedTime = clock.getElapsedTime();
-
-      // Controls update (handles inertia and idle drift)
       controls.update(elapsedTime);
-
-      // Lighting update (subtle rim breathing & hover lerp)
       lighting.update(elapsedTime);
-
-      // Subtle suspended floating oscillation
       positionGroup.position.y = basePosY + Math.sin(elapsedTime * 0.75) * 0.038;
-
-      // Slow particle float
-      const positions = particleGeo.attributes.position.array;
-      for (let i = 0; i < particleCount; i++) {
-        positions[i * 3 + 1] += Math.sin(elapsedTime * 0.4 + i) * 0.0015;
-      }
-      particleGeo.attributes.position.needsUpdate = true;
-
-      // Subtle ambient ring drift
+      // Particle positions are stationary; no upload of a GPU buffer each frame.
       ambientRing.rotation.z = elapsedTime * 0.03;
-
       renderer.render(scene, camera);
+      if (!didRender) {
+        didRender = true;
+        onReady?.();
+      }
     };
 
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      // Restart the clock timing without accumulating a large delta.
+      lastFrameAt = 0;
+    }, { rootMargin: '80px 0px', threshold: 0 });
+    observer.observe(currentMount);
+    const visibilityChange = () => { pageVisible = !document.hidden; };
+    document.addEventListener('visibilitychange', visibilityChange);
     animate();
 
     // 11. Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', visibilityChange);
       window.removeEventListener('resize', handleResize);
 
       currentMount.removeEventListener('pointerenter', onPointerEnter);
@@ -253,11 +265,13 @@ export default function InteractiveEmblem3D() {
             obj.material.forEach((mat) => {
               if (mat.map) mat.map.dispose();
               if (mat.bumpMap) mat.bumpMap.dispose();
+              if (mat.roughnessMap) mat.roughnessMap.dispose();
               mat.dispose();
             });
           } else {
             if (obj.material.map) obj.material.map.dispose();
             if (obj.material.bumpMap) obj.material.bumpMap.dispose();
+            if (obj.material.roughnessMap) obj.material.roughnessMap.dispose();
             obj.material.dispose();
           }
         }
@@ -268,7 +282,7 @@ export default function InteractiveEmblem3D() {
         currentMount.removeChild(renderer.domElement);
       }
     };
-  }, [reducedMotion, hasWebGL]);
+  }, [reducedMotion, hasWebGL, onReady]);
 
   if (reducedMotion || !hasWebGL) {
     return <EmblemFallback />;

@@ -1,0 +1,437 @@
+/* P2 — Throne-safe noir poker layout; scoped entirely to the Skills section. */
+.skills-cinematic-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(16px, 2vw, 36px);
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+.skills-portrait-stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+  perspective: 1400px;
+}
+.skills-dossier-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) minmax(420px, 500px) minmax(280px, 320px);
+  grid-template-rows: auto auto auto;
+  column-gap: clamp(14px, 1.8vw, 24px);
+  row-gap: clamp(12px, 1.5vw, 18px);
+  align-items: start;
+  justify-content: center;
+}
+.skills-playing-card {
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+  perspective: 950px;
+}
+/* Two cards left, two right; reserve the entire middle of the first two rows for the portrait. */
+.skills-playing-card--programming { grid-column: 1; grid-row: 1; }
+.skills-playing-card--ai-automation { grid-column: 1; grid-row: 2; }
+.skills-playing-card--frontend { grid-column: 3; grid-row: 1; }
+.skills-playing-card--tools { grid-column: 3; grid-row: 2; }
+.skills-playing-card--exploration { grid-column: 2; grid-row: 3; }
+.skills-throne-column {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 760px;
+  overflow: visible;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.skills-throne-backdrop {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  overflow: visible;
+  isolation: isolate;
+}
+.skills-throne-halo {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 650px;
+  height: 480px;
+  background: radial-gradient(ellipse 48% 40% at 50% 32%, rgba(193, 18, 31, 0.18), transparent 85%);
+  pointer-events: none;
+  z-index: 0;
+}
+.skills-throne-parallax {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transform-origin: center 25%;
+  will-change: auto;
+  overflow: visible;
+  z-index: 1;
+}
+.skills-throne-breath {
+  flex: 0 0 auto;
+  width: clamp(620px, 60vw, 865px);
+  max-width: none;
+  margin-top: 25px;
+  opacity: 1;
+  transform-origin: center 65%;
+  filter: brightness(1.05) saturate(.96) contrast(1.05);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 76%, rgba(0,0,0,.85) 87%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 76%, rgba(0,0,0,.85) 87%, transparent 100%);
+}
+.skills-throne-person { display: block; width: 100%; height: auto; }
+.skills-throne-vignette, .skills-throne-depth-shade { position: absolute; inset: 0; pointer-events: none; }
+.skills-throne-vignette {
+  background: radial-gradient(ellipse 82% 58% at 50% 33%, transparent 46%, rgba(8,8,8,.2) 81%, #080808 100%);
+}
+.skills-throne-depth-shade {
+  background: linear-gradient(to bottom, transparent 0%, transparent 71%, rgba(8,8,8,.23) 86%, #080808 100%);
+}
+.skills-playing-card-face {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --pointer-x: 50%;
+  --pointer-y: 20%;
+  position: relative;
+  isolation: isolate;
+  min-height: 390px;
+  height: 100%;
+  padding: 1.05rem 1.12rem 1.1rem;
+  overflow: hidden;
+  border: 1px solid rgba(174,139,81,.58);
+  border-radius: 7px;
+  background:
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(186,128,58,.085), transparent 58%),
+    linear-gradient(145deg, rgba(31,27,23,.94), rgba(8,8,10,.95) 66%, rgba(25,13,14,.94));
+  box-shadow: 0 16px 36px rgba(0,0,0,.58), inset 0 0 0 1px rgba(255,216,145,.04);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(0);
+  transform-style: preserve-3d;
+  transition: transform 280ms cubic-bezier(.16,1,.3,1), border-color 250ms ease, box-shadow 250ms ease;
+}
+.skills-playing-card:hover .skills-playing-card-face,
+.skills-playing-card:focus-within .skills-playing-card-face {
+  border-color: rgba(226,178,102,.90);
+  box-shadow: 0 22px 50px rgba(0,0,0,.7), 0 0 24px rgba(152,36,31,.08), inset 0 0 0 1px rgba(255,218,157,.11);
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-5px);
+}
+.skills-playing-card-border {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(184,143,77,.30);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.skills-playing-card-border::before,
+.skills-playing-card-border::after {
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-color: #c69b5c;
+  border-style: solid;
+  opacity: .8;
+}
+.skills-playing-card-border::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.skills-playing-card-border::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+.skills-playing-card-corner {
+  position: absolute;
+  left: 17px;
+  top: 19px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  color: #d4ad70;
+  font: 700 18px/1 'Oswald', sans-serif;
+  pointer-events: none;
+}
+.skills-playing-card-corner span { font-size: 17px; }
+.skills-playing-card-corner--bottom { inset: auto 17px 16px auto; transform: rotate(180deg); }
+.skills-playing-card--diamonds .skills-playing-card-corner,
+.skills-playing-card--hearts .skills-playing-card-corner { color: #be3743; }
+.skills-playing-card-watermark {
+  position: absolute;
+  top: 45%; left: 50%;
+  font: 240px/1 Georgia, serif;
+  transform: translate(-50%, -50%);
+  color: rgba(188,149,87,.035);
+  pointer-events: none;
+}
+.skills-playing-card-content {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  min-height: 352px;
+  height: 100%;
+  padding: 0 12px 0 20px;
+}
+.skills-playing-card-eyebrow {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(188,143,80,.25);
+  font: 600 9px/1.4 'JetBrains Mono', monospace;
+  letter-spacing: .15em; color: #bc9360;
+}
+.skills-playing-card-eyebrow svg { color: #b28c55; }
+.skills-playing-card-heading { text-align: center; padding: 0 0 10px; }
+.skills-playing-card-ornament { font: 23px/1 Georgia, serif; color: #b88b51; }
+.skills-playing-card-heading h3 {
+  margin: 8px 0;
+  color: #f4eee7;
+  font: 700 clamp(18px,1.55vw,23px)/1.15 'Oswald',sans-serif;
+  text-transform: uppercase; letter-spacing: .055em;
+}
+.skills-playing-card-heading p { color: #bcb5ae; font: 400 12px/1.5 'Inter',sans-serif; min-height: 36px; }
+.skills-playing-card-skills {
+  list-style: none; padding: 0; margin: 8px 0 10px;
+  display: grid; gap: 5px;
+}
+.skills-playing-card-skill {
+  display: flex; align-items: center; gap: 8px;
+  min-width: 0; padding: 7px 8px;
+  border: 1px solid rgba(173,135,82,.25);
+  background: rgba(6,6,8,.57);
+  color: #ebe5dc;
+  font: 600 10px/1.3 'JetBrains Mono',monospace;
+  text-transform: uppercase;
+}
+.skills-playing-card-status { width: 5px; height: 5px; flex: 0 0 5px; background: #666; }
+.skills-playing-card-status--experienced { background: #c1121f; }
+.skills-playing-card-status--learning { background: #b79b68; }
+.skills-playing-card-status--exploring { background: #777; }
+.skills-playing-card-skill-name { min-width: 0; overflow-wrap: anywhere; }
+.skills-playing-card-action {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: auto 0 0; padding: 14px 0 6px; width: 100%;
+  border-top: 1px solid rgba(188,143,80,.35);
+  color: #d3a970; background: transparent; text-align: left;
+  font: 700 10px/1.2 'JetBrains Mono',monospace;
+  letter-spacing: .06em; cursor: pointer;
+}
+.skills-playing-card-action:hover { color: #f3d299; }
+.skills-playing-card-action:focus-visible { outline: 2px solid #efcb86; outline-offset: 4px; }
+.skills-playing-card-expansion[hidden] { display: none; }
+.skills-playing-card-expansion { padding: 14px 0 4px; color: #d2c7b7; }
+.skills-playing-card-expansion-title {
+  font: 700 10px 'JetBrains Mono',monospace;
+  letter-spacing: .15em; color: #d3a970; margin: 0 0 9px;
+}
+.skills-playing-card-expansion ul { list-style: none; padding: 0; margin: 0; }
+.skills-playing-card-expansion li { padding: 7px 0; border-top: 1px solid #40362e; display: grid; gap: 4px; }
+.skills-playing-card-expansion strong { font: 600 10px 'JetBrains Mono',monospace; color: #eee0cb; }
+.skills-playing-card-expansion li span { font: 400 12px/1.4 'Inter',sans-serif; color: #b1a496; }
+@media (min-width: 980px) and (max-width: 1199px) {
+  .skills-dossier-grid {
+    grid-template-columns: minmax(260px, 290px) minmax(380px, 440px) minmax(260px, 290px);
+    gap: 16px;
+  }
+  .skills-throne-column { min-height: 740px; }
+  .living-character-stage { width: 1040px; }
+  .skills-playing-card-face { padding: .9rem; }
+  .skills-playing-card-content { padding: 0 9px 0 17px; }
+  .skills-playing-card-heading h3 { font-size: 19px; }
+}
+/* Tablet: portrait first, four cards in two columns, fifth centered. */
+@media (min-width: 700px) and (max-width: 979px) {
+  .skills-dossier-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .skills-throne-column {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 520px;
+    overflow: hidden;
+  }
+  .living-character-stage {
+    width: min(130vw, 880px);
+    margin-top: -10px;
+  }
+  .skills-playing-card--programming { grid-column: 1; grid-row: 2; }
+  .skills-playing-card--frontend { grid-column: 2; grid-row: 2; }
+  .skills-playing-card--ai-automation { grid-column: 1; grid-row: 3; }
+  .skills-playing-card--tools { grid-column: 2; grid-row: 3; }
+  .skills-playing-card--exploration { grid-column: 1 / -1; grid-row: 4; width: min(100%, 420px); justify-self: center; }
+  .skills-throne-backdrop { inset: 0; transform: none; overflow: hidden; }
+}
+/* Mobile: the portrait is first, cards stack in logical source order. */
+@media (max-width: 699px) {
+  .skills-dossier-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .skills-throne-column {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 400px;
+    overflow: hidden;
+  }
+  .living-character-stage {
+    width: min(175vw, 760px);
+    margin-top: 0;
+  }
+  .skills-playing-card--programming { grid-column: 1; grid-row: 2; }
+  .skills-playing-card--frontend { grid-column: 1; grid-row: 3; }
+  .skills-playing-card--ai-automation { grid-column: 1; grid-row: 4; }
+  .skills-playing-card--tools { grid-column: 1; grid-row: 5; }
+  .skills-playing-card--exploration { grid-column: 1; grid-row: 6; }
+  .skills-throne-backdrop { inset: 0; transform: none; overflow: hidden; }
+  .skills-playing-card-face { min-height: 370px; }
+  .skills-playing-card-content { min-height: 333px; }
+  .skills-playing-card-heading h3 { font-size: 22px; }
+}
+/* ==========================================================================
+   Cinematic Side Rails & Atmospheric Environment
+   ========================================================================== */
+
+.skills-side-rail {
+  position: sticky;
+  top: 120px;
+  z-index: 5;
+  transition: opacity 0.3s ease;
+}
+
+.skills-side-rail--left {
+  width: 90px;
+  flex: 0 0 90px;
+  align-items: center;
+}
+
+.skills-side-rail--right {
+  width: 170px;
+  flex: 0 0 170px;
+}
+
+/* Thin metallic-gold vertical rule with center diamond */
+.skills-gold-rule {
+  width: 1px;
+  height: 110px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(198, 155, 92, 0.15) 20%,
+    rgba(226, 178, 102, 0.65) 50%,
+    rgba(198, 155, 92, 0.15) 80%,
+    transparent 100%
+  );
+  position: relative;
+}
+
+.skills-gold-rule::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: #c69b5c;
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 8px rgba(198, 155, 92, 0.6);
+}
+
+.skills-arsenal-vertical-title {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  letter-spacing: 0.42em;
+  font-family: 'Oswald', sans-serif;
+  color: rgba(161, 161, 161, 0.4);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Right Interactive Skill Index */
+.skills-index-header {
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(198, 155, 92, 0.2);
+}
+
+.skills-index-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background: transparent;
+  border: 1px solid transparent;
+  outline: none;
+  text-align: left;
+  transition: all 0.22s ease;
+}
+
+.skills-index-item:hover,
+.skills-index-item:focus-visible,
+.skills-index-item--active {
+  background: rgba(20, 20, 24, 0.75);
+  border-color: rgba(198, 155, 92, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.skills-index-item:focus-visible {
+  outline: 1px solid #c69b5c;
+  outline-offset: 2px;
+}
+
+.skills-index-indicator {
+  width: 0;
+  height: 1px;
+  margin-top: 4px;
+  background: linear-gradient(90deg, #c69b5c 0%, rgba(198, 155, 92, 0.2) 100%);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skills-index-item:hover .skills-index-indicator,
+.skills-index-item--active .skills-index-indicator {
+  width: 100%;
+}
+
+/* Synchronized Card Highlight (When Index Item Hovered) */
+.skills-playing-card--active-synced .skills-playing-card-face {
+  border-color: rgba(226, 178, 102, 0.95) !important;
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.75), 0 0 28px rgba(198, 155, 92, 0.22), inset 0 0 0 1px rgba(255, 218, 157, 0.15) !important;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-6px) !important;
+}
+
+/* Ambient Cursor Lighting Follower */
+.skills-ambient-cursor-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-throne-parallax { will-change: auto; }
+  .skills-playing-card-face, .skills-playing-card:hover .skills-playing-card-face, .skills-playing-card--active-synced .skills-playing-card-face { transition: none !important; transform: none !important; }
+  .skills-side-rail { transition: none !important; }
+  .skills-index-indicator { transition: none !important; }
+}
