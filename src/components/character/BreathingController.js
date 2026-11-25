@@ -3,9 +3,14 @@ import { CharacterMotionConfig } from './CharacterMotionConfig';
 /**
  * BreathingController
  *
- * Implements biomechanically accurate resting respiration (12–18 breaths/min)
- * with physiological asymmetry (shorter inhalation, longer exhalation) and
- * natural inter-cycle variation.
+ * Implements perceptible, calm resting respiration (12–16 breaths/min)
+ * for a seated person on a throne.
+ *
+ * Microscopic Kinematics:
+ * - Sternum lift: ~3.2px during inhalation
+ * - Ribcage & lapel lateral expansion: ~2.0%
+ * - Anteroposterior volume expansion: ~1.2%
+ * - Shoulders & neck follow with realistic phase lag
  */
 export class BreathingController {
   constructor(config = CharacterMotionConfig.respiration) {
@@ -23,6 +28,7 @@ export class BreathingController {
    *   chestScaleX: number,
    *   chestScaleY: number,
    *   shoulderLift: number,
+   *   headLift: number,
    *   tieLagLift: number,
    *   phase: 'inhale' | 'exhale',
    *   progress: number
@@ -36,7 +42,7 @@ export class BreathingController {
       this.cycleStartTime = t;
       this.breathCount++;
       const jitter = (Math.random() - 0.5) * 2 * this.config.jitterRange;
-      this.currentCycleDuration = Math.max(3.5, Math.min(5.5, this.config.cycleDuration + jitter));
+      this.currentCycleDuration = Math.max(3.8, Math.min(5.2, this.config.cycleDuration + jitter));
     }
 
     const cycleElapsed = t - this.cycleStartTime;
@@ -58,7 +64,7 @@ export class BreathingController {
       progress = 0.5 * (1 + Math.cos(Math.PI * norm));
     }
 
-    // Delayed shoulder response (~150ms phase lag)
+    // Delayed shoulder response (~160ms phase lag)
     const shoulderElapsed = Math.max(0, cycleElapsed - this.config.shoulderPhaseLag);
     let shoulderProgress = 0;
     if (shoulderElapsed < inhaleDuration) {
@@ -82,13 +88,15 @@ export class BreathingController {
     const chestScaleX = 1.0 + progress * (this.config.chestScaleX - 1.0);
     const chestScaleY = 1.0 + progress * (this.config.chestScaleY - 1.0);
     const shoulderLift = shoulderProgress * this.config.chestLiftPx * this.config.shoulderCoupling;
-    const tieLagLift = tieProgress * this.config.chestLiftPx * 0.75;
+    const headLift = shoulderProgress * this.config.chestLiftPx * this.config.headCoupling;
+    const tieLagLift = tieProgress * this.config.chestLiftPx * 0.70;
 
     return {
       chestLift,
       chestScaleX,
       chestScaleY,
       shoulderLift,
+      headLift,
       tieLagLift,
       phase,
       progress

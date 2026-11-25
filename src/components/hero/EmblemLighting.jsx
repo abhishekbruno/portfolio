@@ -1,58 +1,53 @@
 import * as THREE from 'three';
 
 /**
- * Creates and configures the dramatic neo-noir cinematic lighting system
- * tailored specifically for dark metallic PBR materials:
+ * Neo-Noir Museum Lighting System for the Engraved Ceremonial AB Amulet:
  *
- * 1. Primary Key Light (Top-Left): Soft neutral-white light revealing raised AB lettering, bevels & relief.
- * 2. Deep Crimson Rim Light (Right-Rear): Signature #B90E24 highlight along the coin edge.
- * 3. Secondary Crimson Grazing Light (Bottom-Left): Enhances metallic sidewall knurling.
- * 4. Cool-Neutral Fill Light: Prevents pitch-black crushing without washing out blacks.
- * 5. Reverse Face Key Light: Illuminates the modeled reverse side when rotated 180°.
- * 6. Atmospheric Crimson Back Halo: Generates the soft red silhouette in the dark void.
- * 7. Hover Response: Dynamically intensifies key light & crimson rim on cursor approach.
+ * - Off-axis directional key lights carve dramatic N·L shadowing inside the
+ *   physically recessed AB cavities while igniting polished 45° silver letter bevels.
+ * - Balanced cool silver rim light traces the 180-fluted edge thickness.
+ * - Restrained rear-side crimson environmental rim reflects softly off grazing chamfers
+ *   without painting recessed cuts in bright neon red.
  */
 export function setupEmblemLighting(scene) {
   const lightsGroup = new THREE.Group();
 
-  // 1. Cool Ambient Base
-  const ambientLight = new THREE.AmbientLight(0x202833, 0.72);
+  // 1. Subdued Velvet-Room Cool Ambient (kept low so carved cavity shadows stay rich)
+  const ambientLight = new THREE.AmbientLight(0x181e28, 0.46);
   lightsGroup.add(ambientLight);
 
-  // 2. Primary Key Light (Neutral-White from Top-Left)
-  // Reveals the raised AB lettering, beveled chamfers, and engraved metal structure
-  const keyLight = new THREE.DirectionalLight(0xf2f6ff, 3.15);
-  keyLight.position.set(-4.5, 5.5, 5.5);
+  // 2. Primary Overhead-Left Key Light (angled off-axis for crisp inner wall shadowing & silver bevel highlights)
+  const keyLight = new THREE.DirectionalLight(0xf6f8fc, 3.45);
+  keyLight.position.set(-4.2, 5.2, 4.6);
   lightsGroup.add(keyLight);
 
-  // 3. Cool-Neutral Fill Light (Front-Right)
-  const fillLight = new THREE.DirectionalLight(0xbacbe3, 1.45);
-  fillLight.position.set(3.5, 3.5, 4.0);
-  lightsGroup.add(fillLight);
+  // 3. Soft Overhead-Front Silver Sheen Light (reveals brushed surface grain & top horizontal bevels)
+  const frontSheenLight = new THREE.DirectionalLight(0xeef3fb, 1.35);
+  frontSheenLight.position.set(0.4, 3.6, 5.4);
+  lightsGroup.add(frontSheenLight);
 
-  // 4. Primary Crimson Rim Light (Right-Rear Grazing Edge)
-  const primaryCrimsonRim = new THREE.PointLight(0x9aaecb, 5.8, 22, 1.4);
-  primaryCrimsonRim.position.set(4.5, -2.5, 3.2);
-  lightsGroup.add(primaryCrimsonRim);
+  // 4. Cool Metallic Edge Rim Light (defines machined reeds and outer 45° silver edge bevels)
+  const edgeRimLight = new THREE.PointLight(0xd6e0ee, 5.4, 24, 1.4);
+  edgeRimLight.position.set(4.6, -2.0, 2.2);
+  lightsGroup.add(edgeRimLight);
 
-  // 5. Secondary Crimson Accent Point Light (Bottom-Left)
-  const secondaryCrimsonRim = new THREE.PointLight(0xC1121F, 2.0, 18, 1.5);
-  secondaryCrimsonRim.position.set(-3.8, -3.2, 2.0);
-  lightsGroup.add(secondaryCrimsonRim);
+  // 5. Restrained Crimson Environmental Bounce (strictly edge/rear-side grazing reflection)
+  const crimsonEnvRim = new THREE.PointLight(0x9e0b1f, 2.1, 20, 1.5);
+  crimsonEnvRim.position.set(-4.4, -3.4, -1.6);
+  lightsGroup.add(crimsonEnvRim);
 
-  // 6. Reverse Face Fill Light (Back-Top-Center)
-  const reverseKeyLight = new THREE.DirectionalLight(0xcbd9ed, 2.15);
-  reverseKeyLight.position.set(0, 4.0, -6.5);
+  // 6. Reverse Face Raking Key Light (illuminates back AB crest, laurel wreath & bevel depth)
+  const reverseKeyLight = new THREE.DirectionalLight(0xf0f4fb, 3.0);
+  reverseKeyLight.position.set(3.4, 4.6, -5.0);
   lightsGroup.add(reverseKeyLight);
 
-  // 7. Atmospheric Crimson Back Halo
-  const backHaloLight = new THREE.PointLight(0x1c2637, 3.8, 20, 1.8);
-  backHaloLight.position.set(0, 0, -4.0);
-  lightsGroup.add(backHaloLight);
+  // 7. Reverse Soft Front Fill (lifts wreath pewter sheen cleanly)
+  const reverseFillLight = new THREE.DirectionalLight(0xa3b3c9, 1.25);
+  reverseFillLight.position.set(-2.6, 1.6, -5.0);
+  lightsGroup.add(reverseFillLight);
 
   scene.add(lightsGroup);
 
-  // Hover response state
   let isHovered = false;
   let hoverLerp = 0;
 
@@ -60,18 +55,15 @@ export function setupEmblemLighting(scene) {
     isHovered = hovering;
   };
 
-  // Animation update hook
   const update = (time) => {
-    // Smooth hover transition (lerp)
     const targetHover = isHovered ? 1.0 : 0.0;
     hoverLerp += (targetHover - hoverLerp) * 0.08;
 
-    // Breathing pulse
-    const pulse = Math.sin(time * 1.4) * 0.12;
+    const pulse = Math.sin(time * 1.1) * 0.08;
 
-    primaryCrimsonRim.intensity = 5.8 + pulse * 0.9 + hoverLerp * 1.6;
-    keyLight.intensity = 3.15 + hoverLerp * 0.45;
-    fillLight.intensity = 1.45 + hoverLerp * 0.15;
+    edgeRimLight.intensity = 5.4 + pulse + hoverLerp * 1.4;
+    keyLight.intensity = 3.45 + hoverLerp * 0.45;
+    crimsonEnvRim.intensity = 2.1 + hoverLerp * 0.35;
   };
 
   const dispose = () => {

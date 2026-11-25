@@ -3,7 +3,7 @@ import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { navLinks, personalInfo } from '../../data/portfolio';
 import ThemeToggle from '../ui/ThemeToggle';
 
-export default function Navbar({ activeSection, isDark, onToggleTheme }) {
+export default function Navbar({ activeSection, isDark, onToggleTheme, isHidden = false }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -43,7 +43,9 @@ export default function Navbar({ activeSection, isDark, onToggleTheme }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        isHidden ? 'opacity-0 pointer-events-none -translate-y-4' : 'opacity-100 translate-y-0'
+      } ${
         scrolled
           ? 'py-3.5 bg-[#080808]/95 light:bg-[#f4f4f4]/95 backdrop-blur-md border-b border-[#292929] shadow-2xl'
           : 'py-6 bg-transparent'

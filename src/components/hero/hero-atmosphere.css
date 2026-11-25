@@ -1,0 +1,340 @@
+/* ==========================================================================
+   THE MIDNIGHT CONTINENTAL — NEO-NOIR ARCHITECTURAL HOMEPAGE ENVIRONMENT
+   Palette: Obsidian #050608 · Black Chrome #101319 · Crimson #9F1027 ·
+            Deep Red #490917 · Silver-Blue #788898 · Highlight #D9DEE5
+   Zero CSS blur() filters on animated layers; GPU-composited gradients & SVG.
+   ========================================================================== */
+
+.mc-env-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  background-color: #050608;
+}
+
+.mc-parallax-layer {
+  position: absolute;
+  inset: -16px;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.mc-parallax-distant {
+  transform: translate3d(calc(var(--mc-px, 0) * 6px), calc(var(--mc-py, 0) * 4px), 0);
+}
+
+.mc-parallax-midground {
+  transform: translate3d(calc(var(--mc-px, 0) * 11px), calc(var(--mc-py, 0) * 7px), 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-parallax-distant,
+  .mc-parallax-midground {
+    transform: none !important;
+  }
+}
+
+/* Base obsidian architectural backdrop keeping left typography zone deep & calm */
+.mc-base-wall {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 52% 68% at 76% 46%,
+      rgba(16, 19, 25, 0.85) 0%,
+      rgba(10, 12, 17, 0.65) 48%,
+      rgba(5, 6, 8, 0.96) 88%
+    ),
+    linear-gradient(
+      102deg,
+      #050608 0%,
+      #050608 38%,
+      #090b10 66%,
+      #0d1016 86%,
+      #06070a 100%
+    );
+}
+
+/* Luxury Black-Chrome Architectural Colonnade & Vertical Fluting (Desktop / Tablet) */
+.mc-colonnade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 44%,
+      rgba(16, 19, 25, 0.62) 47.5%,
+      rgba(120, 136, 152, 0.08) 48%,
+      rgba(5, 6, 8, 0.92) 49.5%,
+      transparent 52%,
+      transparent 57%,
+      rgba(22, 27, 36, 0.72) 60%,
+      rgba(120, 136, 152, 0.11) 60.5%,
+      rgba(5, 6, 8, 0.9) 62%,
+      transparent 65%,
+      transparent 75%,
+      rgba(20, 24, 33, 0.78) 78.5%,
+      rgba(159, 16, 39, 0.12) 79.4%,
+      rgba(5, 6, 8, 0.9) 81.5%,
+      transparent 85%,
+      rgba(20, 24, 32, 0.75) 90.5%,
+      rgba(217, 222, 229, 0.085) 91.1%,
+      rgba(159, 16, 39, 0.14) 92.2%,
+      rgba(5, 6, 8, 0.94) 94.5%,
+      transparent 100%
+    );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.65) 12%,
+    #000000 28%,
+    #000000 76%,
+    rgba(0, 0, 0, 0.48) 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.65) 12%,
+    #000000 28%,
+    #000000 76%,
+    rgba(0, 0, 0, 0.48) 90%,
+    transparent 100%
+  );
+}
+
+/* Architectural SVG black-marble veining & subtle chrome mullion lines */
+.mc-marble-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.96;
+}
+
+/* Light Influence 1: Soft Rear-Right Crimson Column Illumination (#9F1027 / #490917) */
+.mc-light-crimson {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 38% 66% at 88% 48%,
+      rgba(159, 16, 39, 0.3) 0%,
+      rgba(73, 9, 23, 0.19) 38%,
+      rgba(73, 9, 23, 0.06) 66%,
+      transparent 84%
+    ),
+    radial-gradient(
+      ellipse 28% 50% at 64% 56%,
+      rgba(159, 16, 39, 0.14) 0%,
+      rgba(73, 9, 23, 0.065) 45%,
+      transparent 78%
+    );
+}
+
+/* Architectural Vertical Cove Slits inside recessed right pilasters (desktop) */
+.mc-crimson-slits {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 10%,
+    rgba(0, 0, 0, 0.88) 34%,
+    #000000 56%,
+    rgba(0, 0, 0, 0.68) 78%,
+    transparent 94%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 10%,
+    rgba(0, 0, 0, 0.88) 34%,
+    #000000 56%,
+    rgba(0, 0, 0, 0.68) 78%,
+    transparent 94%
+  );
+}
+
+.mc-crimson-slit {
+  position: absolute;
+  top: 12%;
+  bottom: 16%;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(159, 16, 39, 0.38) 28%,
+    rgba(214, 46, 72, 0.48) 50%,
+    rgba(73, 9, 23, 0.28) 76%,
+    transparent 100%
+  );
+  box-shadow: 0 0 28px 3px rgba(159, 16, 39, 0.22);
+}
+
+.mc-crimson-slit--primary {
+  left: 79.4%;
+}
+
+.mc-crimson-slit--secondary {
+  left: 92.2%;
+  opacity: 0.72;
+}
+
+/* Light Influence 2: Cool Silver-Blue Specular Wash behind/around the Amulet (#788898 / #D9DEE5) */
+.mc-light-silver {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 34% 42% at 68% 38%,
+      rgba(217, 222, 229, 0.125) 0%,
+      rgba(120, 136, 152, 0.115) 34%,
+      rgba(16, 19, 25, 0.06) 62%,
+      transparent 84%
+    ),
+    radial-gradient(
+      ellipse 24% 30% at 58% 32%,
+      rgba(217, 222, 229, 0.085) 0%,
+      rgba(120, 136, 152, 0.045) 48%,
+      transparent 78%
+    );
+}
+
+/* Light Influence 3 & Polished Black Marble Floor Impression (Subtle, no hard horizon cut) */
+.mc-floor-stone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36%;
+  background:
+    radial-gradient(
+      ellipse 46% 62% at 54% 96%,
+      rgba(73, 9, 23, 0.22) 0%,
+      rgba(120, 136, 152, 0.085) 42%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 22% 84% at 74% 88%,
+      rgba(120, 136, 152, 0.115) 0%,
+      rgba(217, 222, 229, 0.045) 38%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 18% 82% at 88% 90%,
+      rgba(159, 16, 39, 0.165) 0%,
+      rgba(73, 9, 23, 0.075) 45%,
+      transparent 78%
+    );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    rgba(0, 0, 0, 0.92) 86%,
+    #000000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 42%,
+    rgba(0, 0, 0, 0.92) 86%,
+    #000000 100%
+  );
+}
+
+/* Faint polished dark marble stone seam lines tucked low on right floor only */
+.mc-floor-veins {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      166deg,
+      transparent 44%,
+      rgba(120, 136, 152, 0.055) 44.2%,
+      transparent 44.5%
+    ),
+    linear-gradient(
+      172deg,
+      transparent 68%,
+      rgba(217, 222, 229, 0.04) 68.15%,
+      transparent 68.4%
+    );
+  -webkit-mask-image: radial-gradient(
+    ellipse 64% 85% at 74% 92%,
+    #000000 15%,
+    rgba(0, 0, 0, 0.45) 55%,
+    transparent 88%
+  );
+  mask-image: radial-gradient(
+    ellipse 64% 85% at 74% 92%,
+    #000000 15%,
+    rgba(0, 0, 0, 0.45) 55%,
+    transparent 88%
+  );
+}
+
+/* Deep Left-Side Readability Curtain keeping outer right gallery alcove visible */
+.mc-readability-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #050608 0%,
+      rgba(5, 6, 8, 0.94) 24%,
+      rgba(5, 6, 8, 0.62) 40%,
+      rgba(5, 6, 8, 0.14) 54%,
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 94% 92% at 68% 48%,
+      transparent 60%,
+      rgba(5, 6, 8, 0.36) 86%,
+      rgba(5, 6, 8, 0.78) 100%
+    );
+}
+
+/* Mobile & Narrow Viewport Adaptation: Lighter lighting balance, crisp readability */
+@media (max-width: 1023px) {
+  .mc-light-crimson {
+    background:
+      radial-gradient(
+        ellipse 56% 52% at 68% 38%,
+        rgba(159, 16, 39, 0.18) 0%,
+        rgba(73, 9, 23, 0.09) 45%,
+        transparent 78%
+      );
+  }
+
+  .mc-light-silver {
+    background:
+      radial-gradient(
+        ellipse 48% 40% at 54% 34%,
+        rgba(217, 222, 229, 0.065) 0%,
+        rgba(120, 136, 152, 0.05) 42%,
+        transparent 76%
+      );
+  }
+
+  .mc-readability-vignette {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 6, 8, 0.45) 0%,
+        rgba(5, 6, 8, 0.12) 38%,
+        rgba(5, 6, 8, 0.68) 72%,
+        rgba(5, 6, 8, 0.94) 100%
+      );
+  }
+}
+
+@media (max-width: 639px) {
+  .mc-colonnade,
+  .mc-crimson-slits,
+  .mc-marble-svg,
+  .mc-floor-veins {
+    display: none;
+  }
+}

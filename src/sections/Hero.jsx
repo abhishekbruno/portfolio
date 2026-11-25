@@ -1,16 +1,38 @@
-import React, { Suspense, lazy, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, Mail } from 'lucide-react';
+import { ArrowUpRight, Mail, FastForward } from 'lucide-react';
 import { Github, Linkedin } from '../components/ui/Icons';
 import { personalInfo } from '../data/portfolio';
 import CinematicHeroLighting from '../components/hero/CinematicHeroLighting';
+import InteractiveEmblem3D from '../components/hero/InteractiveEmblem3D';
+import { RevealPhase } from '../components/hero/revealPhases';
 
-// Code-split Three.js interactive 3D AB Medallion centerpiece
-const InteractiveEmblem3D = lazy(() => import('../components/hero/InteractiveEmblem3D'));
-
-export default function Hero({ onSceneReady }) {
+export default function Hero({
+  onSceneReady,
+  revealPhase = RevealPhase.INITIALIZING,
+  onPhaseChange,
+  onLoaderComplete,
+  isSkipped = false,
+  onSkip
+}) {
   const heroRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Atmosphere emerges during Phase 3 (camera transition)
+  const isAtmosphereVisible =
+    shouldReduceMotion ||
+    revealPhase === RevealPhase.CAMERA_TRANSITION ||
+    revealPhase === RevealPhase.HERO_INTERACTIVE;
+
+  // Typography and interactive UI emerge during Phase 4 (hero interactive)
+  const isContentVisible =
+    shouldReduceMotion ||
+    revealPhase === RevealPhase.HERO_INTERACTIVE;
+
+  // Skip Intro is only active during the initial camera pullback
+  const isSkipVisible =
+    !shouldReduceMotion &&
+    (revealPhase === RevealPhase.INTRO || revealPhase === RevealPhase.CAMERA_TRANSITION);
 
   // Scroll tracking linked directly to the Hero section
   const { scrollYProgress } = useScroll({
@@ -27,12 +49,11 @@ export default function Hero({ onSceneReady }) {
   const yEmblemCanvas = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : 52]);
 
   // ─── HEADLINE SCROLL-LINKED TRANSITIONS ───
-  // Subtly lifts the title, gently widens letter-spacing, and gracefully reduces opacity near hero exit
   const titleY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -42]);
   const titleSpacing = useTransform(scrollYProgress, [0, 1], ['0.04em', shouldReduceMotion ? '0.04em' : '0.08em']);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.85, 0.3]);
 
-  // Content scroll offset (moves upward slower than background)
+  // Content scroll offset
   const contentY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -26]);
 
   const scrollToSection = (e, id) => {
@@ -59,43 +80,36 @@ export default function Hero({ onSceneReady }) {
     <section
       id="hero"
       ref={heroRef}
-      className="relative min-h-screen w-full flex items-center overflow-hidden pt-24 pb-16 border-b border-[#292929] bg-[#080808]"
+      className="relative min-h-screen w-full flex items-center overflow-hidden pt-24 pb-16 border-b border-[#292929] bg-[#050608]"
     >
-      {/* ─── LAYER 1: Distant Ambient Crimson Illumination (Parallax Layer 1) ─── */}
+      {/* ─── LAYER 1: Midnight Continental Luxury Architecture & Distant Crimson Illumination ─── */}
       <motion.div
         style={{ y: yDistantAmbient }}
-        className="absolute inset-0 pointer-events-none select-none z-0"
+        className={`absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000 ${
+          isAtmosphereVisible ? 'opacity-100' : 'opacity-0'
+        }`}
         aria-hidden="true"
       >
-        {/* Soft Upper-Left Directional Crimson Source & Dynamic Mouse Follower */}
-        <CinematicHeroLighting />
-
-        {/* Ambient glow radiating specifically behind the emblem footprint */}
-        <div
-          className="absolute top-1/2 right-[5%] sm:right-[15%] lg:right-[20%] -translate-y-1/2 w-[550px] sm:w-[700px] h-[550px] sm:h-[700px] rounded-full pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(circle at center, rgba(193, 18, 31, 0.16) 0%, rgba(120, 0, 0, 0.06) 40%, transparent 70%)'
-          }}
-        />
+        <CinematicHeroLighting layer="distant" />
       </motion.div>
 
-      {/* ─── LAYER 2: Midground Atmospheric Haze & Architectural Rings (Parallax Layer 2) ─── */}
+      {/* ─── LAYER 2: Midground Specular Silver-Blue Sheen, Floor Stone Wash & Contrast Falloff ─── */}
       <motion.div
         style={{ y: yMidgroundHaze }}
-        className="absolute inset-0 pointer-events-none select-none z-0"
+        className={`absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000 ${
+          isAtmosphereVisible ? 'opacity-100' : 'opacity-0'
+        }`}
         aria-hidden="true"
       >
-        {/* Subtle curved architectural background rings */}
-        <div className="absolute top-1/2 right-[10%] lg:right-[18%] -translate-y-1/2 w-[720px] h-[720px] rounded-full border border-[#292929]/30 pointer-events-none hidden sm:block" />
-        <div className="absolute top-1/2 right-[10%] lg:right-[18%] -translate-y-1/2 w-[920px] h-[920px] rounded-full border border-[#292929]/15 pointer-events-none hidden lg:block" />
-
-        {/* Atmospheric vignette to smoothly integrate into the dark void */}
-        <div className="absolute inset-0 bg-vignette pointer-events-none" />
+        <CinematicHeroLighting layer="midground" />
       </motion.div>
 
       {/* Top Editorial Index & Coordinates */}
-      <div className="absolute top-24 left-4 sm:left-8 lg:left-[6vw] xl:left-[7vw] 2xl:left-[8vw] flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#888888] tracking-[0.25em] uppercase z-20 pointer-events-none">
+      <div
+        className={`absolute top-24 left-4 sm:left-8 lg:left-[6vw] xl:left-[7vw] 2xl:left-[8vw] flex items-center gap-3 font-mono text-[10px] sm:text-xs text-[#888888] tracking-[0.25em] uppercase z-20 pointer-events-none transition-opacity duration-700 ${
+          isContentVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <span className="text-[#C1121F] font-bold">001</span>
         <span>/</span>
         <span>RESEARCH &amp; SOFTWARE ARCHITECTURE</span>
@@ -104,28 +118,43 @@ export default function Hero({ onSceneReady }) {
       </div>
 
       {/* Floating Tactical Environmental Indicators (Near 3D Medallion) */}
-      <div className="absolute top-28 right-8 font-mono text-[9px] text-[#555555] tracking-[0.25em] uppercase z-20 pointer-events-none hidden lg:block text-right">
+      <div
+        className={`absolute top-28 right-8 font-mono text-[9px] text-[#555555] tracking-[0.25em] uppercase z-20 pointer-events-none hidden lg:block text-right transition-opacity duration-700 ${
+          isContentVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <div>ARTIFACT SPEC // AB-MEDALLION-01</div>
         <div className="text-[#C1121F]/80 mt-1">CORE MATERIAL // GUNMETAL • PBR</div>
       </div>
 
-      <div className="absolute bottom-12 right-8 font-mono text-[9px] text-[#555555] tracking-[0.25em] uppercase z-20 pointer-events-none hidden lg:block text-right">
+      <div
+        className={`absolute bottom-32 right-8 font-mono text-[9px] text-[#555555] tracking-[0.25em] uppercase z-20 pointer-events-none hidden lg:block text-right transition-opacity duration-700 ${
+          isContentVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <div>PHYSICAL INSPECTION // ACTIVE</div>
         <div className="text-[#888888] mt-1">DRAG SCENE TO ROTATE ARTIFACT</div>
       </div>
 
-      {/* ─── LAYER 3: Full-Bleed Integrated 3D AB Medallion Canvas (Parallax Layer 3) ─── */}
+      {/* ─── LAYER 3: Single Persistent 3D AB Medallion Centerpiece ─── */}
       <motion.div
         style={{ y: yEmblemCanvas }}
         className="absolute inset-0 z-10 w-full h-full pointer-events-auto"
       >
-        <Suspense fallback={<div className="absolute right-0 top-0 flex h-full w-[55%] items-center justify-center pointer-events-none" aria-hidden="true"><div className="h-40 w-40 animate-pulse rounded-full border border-[#75808a]/40 shadow-[0_0_50px_rgba(120,135,155,.12)]" /></div>}>
-          <InteractiveEmblem3D onReady={onSceneReady} />
-        </Suspense>
+        <InteractiveEmblem3D
+          onReady={onSceneReady}
+          onPhaseChange={onPhaseChange}
+          onComplete={onLoaderComplete}
+          isSkipped={isSkipped}
+        />
       </motion.div>
 
       {/* ─── FOREGROUND: Cinematic Typography & Controls (Asymmetric Left-Aligned Composition) ─── */}
-      <div className="relative z-20 w-full px-4 sm:px-8 lg:px-0 lg:pl-[6vw] xl:pl-[7vw] 2xl:pl-[8vw] flex flex-col justify-center pointer-events-none">
+      <div
+        className={`relative z-20 w-full px-4 sm:px-8 lg:px-0 lg:pl-[6vw] xl:pl-[7vw] 2xl:pl-[8vw] flex flex-col justify-center pointer-events-none transition-opacity duration-700 ${
+          isContentVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <motion.div
           style={{ y: contentY }}
           className="max-w-2xl lg:max-w-3xl flex flex-col items-start text-left pointer-events-auto"
@@ -133,7 +162,7 @@ export default function Hero({ onSceneReady }) {
           {/* Status Telemetry Flag */}
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.5, delay: 0.05 }}
             className="inline-flex items-center gap-2.5 px-3 py-1 border border-[#292929] bg-[#111111]/90 backdrop-blur-sm mb-6"
           >
@@ -156,7 +185,7 @@ export default function Hero({ onSceneReady }) {
             <div className="overflow-hidden">
               <motion.h1
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: '100%' }}
-                animate={{ opacity: 1, y: '0%' }}
+                animate={isContentVisible ? { opacity: 1, y: '0%' } : { opacity: 0, y: '100%' }}
                 transition={{ ...transitionSettings, delay: 0.1 }}
                 className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold text-[#F5F5F5] leading-[0.85] tracking-tight uppercase select-none drop-shadow-2xl"
               >
@@ -168,7 +197,7 @@ export default function Hero({ onSceneReady }) {
             <div className="overflow-hidden">
               <motion.h1
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: '100%' }}
-                animate={{ opacity: 1, y: '0%' }}
+                animate={isContentVisible ? { opacity: 1, y: '0%' } : { opacity: 0, y: '100%' }}
                 transition={{ ...transitionSettings, delay: 0.24 }}
                 className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold text-[#F5F5F5] leading-[0.85] tracking-tight uppercase select-none drop-shadow-2xl"
               >
@@ -182,7 +211,7 @@ export default function Hero({ onSceneReady }) {
           {/* Thin Crimson Laser Rule Animating from Left to Right */}
           <motion.div
             initial={shouldReduceMotion ? { scaleX: 1 } : { scaleX: 0 }}
-            animate={{ scaleX: 1 }}
+            animate={isContentVisible ? { scaleX: 1 } : { scaleX: 0 }}
             style={{ originX: 0 }}
             transition={{ duration: 0.6, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
             className="w-full max-w-md sm:max-w-lg h-[2px] bg-gradient-to-r from-[#C1121F] via-[#C1121F]/60 to-transparent my-6 shadow-[0_0_10px_#C1121F]"
@@ -191,7 +220,7 @@ export default function Hero({ onSceneReady }) {
           {/* Sub-Headline Entrance */}
           <motion.h2
             initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ duration: 0.5, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
             className="font-title text-base sm:text-xl font-bold tracking-[0.18em] text-[#E0E0E0] uppercase mb-4"
           >
@@ -201,7 +230,7 @@ export default function Hero({ onSceneReady }) {
           {/* Editorial Paragraph Slide-up */}
           <motion.p
             initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.6, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
             className="font-body text-sm sm:text-base text-[#A1A1A1] max-w-xl leading-relaxed mb-8 drop-shadow"
           >
@@ -212,7 +241,7 @@ export default function Hero({ onSceneReady }) {
           {/* Sequential CTA Buttons Reveal */}
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ duration: 0.5, delay: 0.72, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap items-center gap-4 mb-10 w-full sm:w-auto"
           >
@@ -237,7 +266,7 @@ export default function Hero({ onSceneReady }) {
           {/* Technical Telemetry Row Fade In */}
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={isContentVisible ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.84 }}
             className="flex items-center gap-6 pt-4 border-t border-[#292929] w-full max-w-lg"
           >
@@ -266,6 +295,23 @@ export default function Hero({ onSceneReady }) {
             </div>
           </motion.div>
         </motion.div>
+      </div>
+
+      {/* ─── MINIMALIST SKIP INTRO BUTTON (Visible only during camera sequence) ─── */}
+      <div
+        className={`absolute bottom-8 right-6 sm:right-10 z-30 transition-opacity duration-500 ${
+          isSkipVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <button
+          type="button"
+          onClick={onSkip}
+          className="flex items-center gap-2 px-3.5 py-1.5 font-mono text-xs text-[#94a3b8] hover:text-[#c1121f] border border-[#292929] bg-[#0c0c0e]/85 backdrop-blur-md shadow-lg transition-all"
+          aria-label="Skip introductory camera sequence"
+        >
+          <span>SKIP INTRO</span>
+          <FastForward className="w-3.5 h-3.5 text-[#c1121f]" />
+        </button>
       </div>
     </section>
   );

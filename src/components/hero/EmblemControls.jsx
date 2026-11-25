@@ -1,163 +1,152 @@
 import * as THREE from 'three';
 
 /**
- * High-performance 3D Trackball & Inertia Controller for the AB Medallion.
+ * Pure X/Y Bidirectional Trackball & Idle Showcase Controller for the AB Amulet.
  *
- * Capabilities:
- * - Full 3-Axis (XYZ) Free Rotation using Quaternions (Gimbal-lock free):
- *   • Horizontal drag -> Yaw (Y-axis) revealing coin edge & reverse face.
- *   • Vertical drag -> Pitch (X-axis) revealing top/bottom bevels & curved text.
- *   • Shift + Drag (or 2-finger twist on touch) -> Roll (Z-axis) spinning in-plane.
- * - Fluid Physics Inertia: Damped angular momentum with velocity clamping.
- * - Autonomous Neo-Noir Idle Drift: Breathing tilt + slow orbital rotation.
- * - Smooth Reset: Double-click / double-tap smoothly tweens back to canonical front-facing orientation.
+ * Design guarantees:
+ * - Zero revolution / zero orbital translation: rotates strictly around medallion's (0, 0, 0) center.
+ * - Full 360° gimbal-lock-free bidirectional X and Y rotation via normalized quaternions:
+ *     • Horizontal drag -> World Y (+Y / -Y), inspecting front, edge sidewalls & reverse.
+ *     • Vertical drag -> World X (+X / -X), operating simultaneously with Y drag.
+ * - Frame-rate-independent delta-time inertia damping (rad/sec).
+ * - Smooth orientation-preserving idle motion:
+ *     • Slowly reveals front & reverse engraved faces while gliding past edge-on angles.
+ *     • Gentle breathing pitch around the medallion's horizontal equatorial axis (zero Z-pinwheel roll).
+ *     • Blends smoothly back from any user-left orientation without resetting.
  */
 export function createEmblemControls(emblemGroup, domElement) {
-  // State
+  let isEnabled = false;
   let isDragging = false;
-  let isShiftActive = false;
   let lastPointerX = 0;
   let lastPointerY = 0;
-  let lastTouchAngle = 0;
-  let isTwoFingerTouch = false;
+  let lastMoveTime = performance.now();
   let lastInteractionTime = performance.now();
 
-  // Angular velocity vector (rad/frame)
-  const angularVelocity = new THREE.Vector3(0, 0, 0);
-  const maxAngularSpeed = 0.22;
-  const dampingFactor = 0.94;
+  // Angular velocities in radians/second
+  let velX = 0;
+  let velY = 0;
+  const MAX_ANGULAR_VEL = 9.0; // rad/s cap
+  const ROTATE_SPEED = 0.0058; // rad/px
+  const DAMPING_RATE = 4.2;    // exponential decay/s
 
-  // Reusable Quaternion math instances
-  const qDelta = new THREE.Quaternion();
-  const axisX = new THREE.Vector3(1, 0, 0);
-  const axisY = new THREE.Vector3(0, 1, 0);
-  const axisZ = new THREE.Vector3(0, 0, 1);
-
-  // Smooth Reset Tweening State
+  // Smooth Reset Tweening State (explicit user double-click or RESET button only)
   let isResetting = false;
   let resetProgress = 1.0;
+  const RESET_DURATION = 0.65; // seconds
   const qResetStart = new THREE.Quaternion();
-  const qResetTarget = new THREE.Quaternion(); // Identity (front-facing)
-
-  // Canonical base orientation
+  const qResetTarget = new THREE.Quaternion();
   const baseQuaternion = new THREE.Quaternion();
 
-  // Sensitivities
-  const ROTATE_SPEED = 0.0055;
-  const INERTIA_FACTOR = 0.65;
+  // Idle blend & phase clock
+  let idleBlend = 0;
+  let idleClock = 0;
 
-  // ─── Pointer Event Handlers ───
-  const onPointerDown = (e) => {
-    // Only respond to primary mouse button or touch
-    if (e.button !== undefined && e.button !== 0) return;
+  // Pre-allocated math objects (0 per-frame GC allocations)
+  const qDelta = new THREE.Quaternion();
+  const qY = new THREE.Quaternion();
+  const qX = new THREE.Quaternion();
+  const qIdleY = new THREE.Quaternion();
+  const qIdleP = new THREE.Quaternion();
+  const axisX = new THREE.Vector3(1, 0, 0);
+  const axisY = new THREE.Vector3(0, 1, 0);
+  const faceZ = new THREE.Vector3(0, 0, 1);
+  const pitchAxis = new THREE.Vector3();
 
+  // ─── Pointer & Touch Handlers ───
+  const startDrag = (clientX, clientY) => {
+    if (!isEnabled) return;
     isDragging = true;
     isResetting = false;
-    lastPointerX = e.clientX;
-    lastPointerY = e.clientY;
-    isShiftActive = e.shiftKey;
-    lastInteractionTime = performance.now();
-    angularVelocity.set(0, 0, 0);
-
+    lastPointerX = clientX;
+    lastPointerY = clientY;
+    lastMoveTime = performance.now();
+    lastInteractionTime = lastMoveTime;
+    velX = 0;
+    velY = 0;
+    idleBlend = 0;
     domElement.style.cursor = 'grabbing';
   };
 
-  const onPointerMove = (e) => {
-    isShiftActive = e.shiftKey;
+  const moveDrag = (clientX, clientY) => {
+    if (!isDragging || !isEnabled) return;
+
+    const now = performance.now();
+    const dtMove = Math.max((now - lastMoveTime) / 1000, 0.006);
+    const deltaX = clientX - lastPointerX;
+    const deltaY = clientY - lastPointerY;
+
+    lastPointerX = clientX;
+    lastPointerY = clientY;
+    lastMoveTime = now;
+    lastInteractionTime = now;
+
+    // Simultaneous bidirectional World X & Y rotation
+    const angleY = deltaX * ROTATE_SPEED;
+    const angleX = deltaY * ROTATE_SPEED;
+
+    qY.setFromAxisAngle(axisY, angleY);
+    qX.setFromAxisAngle(axisX, angleX);
+    qDelta.multiplyQuaternions(qY, qX);
+
+    emblemGroup.quaternion.premultiply(qDelta).normalize();
+
+    // Instantaneous angular velocity smoothed cleanly for inertia
+    const instVelY = THREE.MathUtils.clamp(angleY / dtMove, -MAX_ANGULAR_VEL, MAX_ANGULAR_VEL);
+    const instVelX = THREE.MathUtils.clamp(angleX / dtMove, -MAX_ANGULAR_VEL, MAX_ANGULAR_VEL);
+    velY = velY * 0.35 + instVelY * 0.65;
+    velX = velX * 0.35 + instVelX * 0.65;
+  };
+
+  const endDrag = () => {
     if (!isDragging) return;
-
-    const deltaX = e.clientX - lastPointerX;
-    const deltaY = e.clientY - lastPointerY;
-    lastPointerX = e.clientX;
-    lastPointerY = e.clientY;
-    lastInteractionTime = performance.now();
-
-    // Check if Shift is held -> rotate Z (Roll)
-    if (isShiftActive) {
-      const angleZ = deltaX * ROTATE_SPEED * 1.2;
-      qDelta.setFromAxisAngle(axisZ, -angleZ);
-      emblemGroup.quaternion.premultiply(qDelta);
-      angularVelocity.z = -angleZ * INERTIA_FACTOR;
-    } else {
-      // Free X & Y Rotation (Trackball style)
-      const angleY = deltaX * ROTATE_SPEED;
-      const angleX = deltaY * ROTATE_SPEED;
-
-      // Rotate around world Y then X
-      const qY = new THREE.Quaternion().setFromAxisAngle(axisY, angleY);
-      const qX = new THREE.Quaternion().setFromAxisAngle(axisX, angleX);
-      qDelta.multiplyQuaternions(qY, qX);
-
-      emblemGroup.quaternion.premultiply(qDelta);
-
-      angularVelocity.x = angleX * INERTIA_FACTOR;
-      angularVelocity.y = angleY * INERTIA_FACTOR;
-      angularVelocity.z = 0;
+    isDragging = false;
+    const now = performance.now();
+    // If pointer paused stationary for >85ms before release, drop residual inertia cleanly
+    if (now - lastMoveTime > 85) {
+      velX = 0;
+      velY = 0;
     }
+    lastInteractionTime = now;
+    domElement.style.cursor = isEnabled ? 'grab' : 'default';
+  };
 
-    // Clamp angular velocity
-    if (angularVelocity.length() > maxAngularSpeed) {
-      angularVelocity.setLength(maxAngularSpeed);
-    }
+  const onPointerDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    startDrag(e.clientX, e.clientY);
+  };
+
+  const onPointerMove = (e) => {
+    moveDrag(e.clientX, e.clientY);
   };
 
   const onPointerUp = () => {
-    if (!isDragging) return;
-    isDragging = false;
-    domElement.style.cursor = 'grab';
-    lastInteractionTime = performance.now();
+    endDrag();
   };
 
-  // ─── Touch Multi-finger Gestures (Z-Roll & Drag) ───
   const onTouchStart = (e) => {
-    if (e.touches.length === 2) {
-      isTwoFingerTouch = true;
-      const dx = e.touches[1].clientX - e.touches[0].clientX;
-      const dy = e.touches[1].clientY - e.touches[0].clientY;
-      lastTouchAngle = Math.atan2(dy, dx);
-    } else if (e.touches.length === 1) {
-      isTwoFingerTouch = false;
-      onPointerDown(e.touches[0]);
-    }
+    if (!isEnabled || e.touches.length === 0) return;
+    startDrag(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   const onTouchMove = (e) => {
-    if (e.touches.length === 2 && isTwoFingerTouch) {
-      const dx = e.touches[1].clientX - e.touches[0].clientX;
-      const dy = e.touches[1].clientY - e.touches[0].clientY;
-      const currentAngle = Math.atan2(dy, dx);
-      let angleDiff = currentAngle - lastTouchAngle;
-      lastTouchAngle = currentAngle;
-
-      // Handle angle wrap-around
-      if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-      if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-
-      qDelta.setFromAxisAngle(axisZ, angleDiff);
-      emblemGroup.quaternion.premultiply(qDelta);
-      angularVelocity.z = angleDiff * INERTIA_FACTOR;
-      lastInteractionTime = performance.now();
-    } else if (e.touches.length === 1) {
-      onPointerMove(e.touches[0]);
-    }
+    if (!isEnabled || e.touches.length === 0) return;
+    moveDrag(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   const onTouchEnd = (e) => {
-    if (e.touches.length < 2) {
-      isTwoFingerTouch = false;
-    }
-    if (e.touches.length === 0) {
-      onPointerUp();
-    }
+    if (e.touches.length === 0) endDrag();
   };
 
-  // ─── Double Click / Double Tap Reset ───
   const resetToCanonical = () => {
+    if (!isEnabled) return;
     isResetting = true;
     resetProgress = 0;
     qResetStart.copy(emblemGroup.quaternion);
     qResetTarget.copy(baseQuaternion);
-    angularVelocity.set(0, 0, 0);
+    velX = 0;
+    velY = 0;
+    idleBlend = 0;
+    lastInteractionTime = performance.now();
   };
 
   const onDoubleClick = (e) => {
@@ -165,8 +154,7 @@ export function createEmblemControls(emblemGroup, domElement) {
     resetToCanonical();
   };
 
-  // Attach event listeners to DOM element
-  domElement.style.cursor = 'grab';
+  domElement.style.cursor = 'default';
   domElement.style.touchAction = 'none';
 
   domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
@@ -180,49 +168,73 @@ export function createEmblemControls(emblemGroup, domElement) {
 
   domElement.addEventListener('dblclick', onDoubleClick);
 
-  // ─── Per-Frame Update (Inertia & Idle Drift) ───
-  const update = (time) => {
+  // ─── Frame-Rate-Independent Delta-Time Update ───
+  const update = (delta) => {
+    if (!isEnabled || delta <= 0) return;
+
     const now = performance.now();
     const timeSinceInteraction = (now - lastInteractionTime) / 1000;
 
-    // 1. Smooth Reset Animation
+    // 1. Explicit Smooth Reset Tween
     if (isResetting) {
-      resetProgress += 0.045;
+      resetProgress += delta / RESET_DURATION;
       if (resetProgress >= 1.0) {
         resetProgress = 1.0;
         isResetting = false;
+        lastInteractionTime = now;
       }
-      // Ease out cubic
-      const t = 1 - Math.pow(1 - resetProgress, 3);
-      emblemGroup.quaternion.slerpQuaternions(qResetStart, qResetTarget, t);
+      const ease = 1 - Math.pow(1 - resetProgress, 3);
+      emblemGroup.quaternion.slerpQuaternions(qResetStart, qResetTarget, ease);
       return;
     }
 
-    // 2. Inertia Phase (when released)
-    if (!isDragging && angularVelocity.lengthSq() > 0.000002) {
-      const speed = angularVelocity.length();
-      const axis = angularVelocity.clone().normalize();
-      qDelta.setFromAxisAngle(axis, speed);
-      emblemGroup.quaternion.premultiply(qDelta);
-      angularVelocity.multiplyScalar(dampingFactor);
+    // 2. Angular Inertia Phase (smooth X & Y decay using delta seconds)
+    const speedSq = velX * velX + velY * velY;
+    if (!isDragging && speedSq > 0.0001) {
+      qY.setFromAxisAngle(axisY, velY * delta);
+      qX.setFromAxisAngle(axisX, velX * delta);
+      qDelta.multiplyQuaternions(qY, qX);
+      emblemGroup.quaternion.premultiply(qDelta).normalize();
+
+      const decay = Math.exp(-DAMPING_RATE * delta);
+      velX *= decay;
+      velY *= decay;
+      idleBlend = 0;
+      return;
     }
 
-    // 3. Autonomous Idle Motion (after user releases & inertia settles)
-    if (!isDragging && timeSinceInteraction > 2.0 && angularVelocity.lengthSq() <= 0.000002) {
-      // Slow, mechanically precise orbital Y rotation
-      const idleYaw = 0.0022;
-      // Gentle breathing vertical tilt
-      const idlePitch = Math.sin(time * 0.7) * 0.0012;
+    if (!isDragging && speedSq <= 0.0001) {
+      velX = 0;
+      velY = 0;
+    }
 
-      const qIdleY = new THREE.Quaternion().setFromAxisAngle(axisY, idleYaw);
-      const qIdleX = new THREE.Quaternion().setFromAxisAngle(axisX, idlePitch);
-      qDelta.multiplyQuaternions(qIdleY, qIdleX);
+    // 3. Autonomous Idle X/Y Showcase (preserves user orientation, zero edge stalling)
+    if (!isDragging && timeSinceInteraction > 1.35) {
+      idleBlend = Math.min(1.0, idleBlend + delta / 1.4);
+      idleClock += delta * idleBlend;
 
-      emblemGroup.quaternion.premultiply(qDelta);
+      // Sense medallion face normal to slow on front/back faces and glide smoothly past edge-on
+      faceZ.set(0, 0, 1).applyQuaternion(emblemGroup.quaternion);
+      const absFaceCos = Math.abs(faceZ.z);
+      const edgeFactor = Math.pow(1 - absFaceCos, 2.0);
+      const yawRate = (0.14 + edgeFactor * 0.58) * idleBlend;
+
+      // Rotate pitch around medallion's horizontal equatorial axis (prevents Z-pinwheel roll drift)
+      pitchAxis.crossVectors(axisY, faceZ);
+      if (pitchAxis.lengthSq() < 0.0001) {
+        pitchAxis.copy(axisX);
+      } else {
+        pitchAxis.normalize();
+      }
+      const pitchRate = Math.sin(idleClock * 0.65) * 0.11 * idleBlend;
+
+      qIdleY.setFromAxisAngle(axisY, yawRate * delta);
+      qIdleP.setFromAxisAngle(pitchAxis, pitchRate * delta);
+      qDelta.multiplyQuaternions(qIdleY, qIdleP);
+      emblemGroup.quaternion.premultiply(qDelta).normalize();
     }
   };
 
-  // ─── Cleanup Function ───
   const dispose = () => {
     domElement.removeEventListener('pointerdown', onPointerDown);
     window.removeEventListener('pointermove', onPointerMove);
@@ -240,6 +252,20 @@ export function createEmblemControls(emblemGroup, domElement) {
     update,
     resetToCanonical,
     dispose,
-    setShiftActive: (active) => { isShiftActive = active; }
+    setBaseQuaternion: (q) => {
+      baseQuaternion.copy(q);
+    },
+    syncAfterHandoff: () => {
+      velX = 0;
+      velY = 0;
+      idleBlend = 0;
+      idleClock = 0;
+      isResetting = false;
+      lastInteractionTime = performance.now();
+    },
+    setEnabled: (val) => {
+      isEnabled = Boolean(val);
+      domElement.style.cursor = isEnabled ? 'grab' : 'default';
+    }
   };
 }

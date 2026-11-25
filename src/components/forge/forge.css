@@ -1,30 +1,29 @@
 /* ==========================================================================
-   THE FORGE — FROM CONCEPT TO EXECUTION
-   Neo-Noir Cinematic Engineering Environment Styles
-   Scoped Typography System: Syne (800), Space Grotesk (700), Manrope (400-500), IBM Plex Mono (500)
+   THE FORGE — A PERSONAL ENGINEERING PHILOSOPHY & MANIFESTO
+   Neo-Noir Cinematic Environment & John Wick–Inspired Title Card Styles
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=Syne:wght@700;800&display=swap');
-
 :root {
-  --forge-bg: #07070a;
+  --forge-bg: #07080B;
   --forge-surface: #0e1117;
   --forge-surface-elevated: #131722;
   --forge-surface-hover: #1a202c;
-  --forge-border: #1f2633;
-  --forge-border-subtle: #161c26;
-  --forge-border-crimson: #c1121f;
-  --forge-crimson: #c1121f;
-  --forge-crimson-bright: #ff3b4b;
-  --forge-crimson-glow: rgba(193, 18, 31, 0.38);
-  --forge-crimson-dim: rgba(193, 18, 31, 0.12);
-  --forge-silver: #cbd5e1;
+  --forge-border: #282C34;
+  --forge-border-subtle: #1b2028;
+  --forge-border-crimson: #C41E37;
+  --forge-crimson: #C41E37;
+  --forge-crimson-bright: #df2238;
+  --forge-crimson-glow: rgba(196, 30, 55, 0.34);
+  --forge-crimson-dim: rgba(196, 30, 55, 0.12);
+  --forge-silver: #B5BAC4;
   --forge-silver-dim: #64748b;
-  --forge-silver-highlight: #f8fafc;
+  --forge-silver-highlight: #F4F4F5;
   --forge-charcoal: #181d28;
   --forge-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Distinctive Scoped Typography System */
+  --font-forge-cinema: 'Oswald', 'Bebas Neue', sans-serif;
+  --font-forge-serif: 'Cormorant Garamond', Georgia, serif;
   --font-forge-hero: 'Syne', sans-serif;
   --font-forge-heading: 'Space Grotesk', sans-serif;
   --font-forge-body: 'Manrope', system-ui, -apple-system, sans-serif;
@@ -47,30 +46,30 @@
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(ellipse 90% 75% at 50% 50%, #000 35%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 50%, #000 35%, transparent 85%);
+    linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 45%, #000 30%, transparent 82%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 45%, #000 30%, transparent 82%);
 }
 
-/* Thermal Forge Crimson Glow */
+/* Restrained Atmospheric Crimson Practical Spill */
 .forge-heat-flare {
   position: absolute;
-  top: 8%;
-  left: -15%;
-  width: 70vw;
-  max-width: 900px;
-  height: 900px;
+  top: 6%;
+  left: -18%;
+  width: 68vw;
+  max-width: 860px;
+  height: 820px;
   border-radius: 50%;
   pointer-events: none;
   background: radial-gradient(
     circle at center,
-    rgba(193, 18, 31, 0.18) 0%,
-    rgba(120, 0, 0, 0.08) 40%,
-    transparent 70%
+    rgba(168, 16, 36, 0.12) 0%,
+    rgba(92, 6, 18, 0.04) 44%,
+    transparent 72%
   );
-  filter: blur(55px);
+  filter: blur(60px);
   z-index: 1;
 }
 
@@ -85,8 +84,8 @@
   pointer-events: none;
   background: radial-gradient(
     circle at center,
-    rgba(203, 213, 225, 0.05) 0%,
-    rgba(30, 41, 59, 0.03) 50%,
+    rgba(203, 213, 225, 0.035) 0%,
+    rgba(30, 41, 59, 0.018) 50%,
     transparent 75%
   );
   filter: blur(60px);
@@ -100,81 +99,346 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse at center,
-    transparent 50%,
-    rgba(5, 5, 8, 0.75) 85%,
-    #050508 100%
+    transparent 45%,
+    rgba(7, 8, 11, 0.8) 85%,
+    #07080B 100%
   );
   z-index: 2;
 }
 
 /* ==========================================================================
-   COMPLETE TYPOGRAPHY REDESIGN
+   JOHN WICK–INSPIRED 3D CINEMA TITLE CARD & FLOOR REFLECTION
    ========================================================================== */
 
-/* Main Cinematic Headlines: Syne ExtraBold (800) */
-.forge-font-hero {
-  font-family: var(--font-forge-hero);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.045em;
-  line-height: 0.98;
+.forge-title-stage {
+  position: relative;
+  isolation: isolate;
 }
 
-/* Fluid Hero Sizing: Desktop 76-116px, Tablet 54-76px, Mobile 38-54px */
-.forge-hero-text {
-  font-size: clamp(2.375rem, 8.8vw, 3.375rem); /* Mobile 38-54px */
+/* Localized Neo-Noir Key & Crimson Practical Lighting behind Title */
+.forge-title-key-spill {
+  position: absolute;
+  top: -12%;
+  left: -8%;
+  width: 85%;
+  height: 62%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 55% at 32% 38%,
+    rgba(214, 224, 240, 0.065) 0%,
+    rgba(148, 163, 184, 0.02) 45%,
+    transparent 78%
+  );
+  filter: blur(28px);
+  z-index: 0;
+}
+
+.forge-title-crimson-spill {
+  position: absolute;
+  top: 28%;
+  left: -10%;
+  width: 96%;
+  height: 75%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 50% at 38% 58%,
+    rgba(178, 14, 34, 0.16) 0%,
+    rgba(110, 8, 22, 0.06) 46%,
+    transparent 78%
+  );
+  filter: blur(34px);
+  z-index: 0;
+}
+
+/* Condensed Uppercase Action-Title Font Scale */
+.forge-title-silver-lead {
+  font-family: var(--font-forge-cinema);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.065em;
+  line-height: 0.94;
+  font-size: clamp(2rem, 6.2vw, 2.75rem);
+}
+
+.forge-title-silver-main {
+  font-family: var(--font-forge-cinema);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 0.93;
+  font-size: clamp(2.35rem, 7.6vw, 3.25rem);
+}
+
+.forge-title-crimson-lead {
+  font-family: var(--font-forge-cinema);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  line-height: 0.95;
+  font-size: clamp(2.15rem, 7.2vw, 3.1rem);
+}
+
+.forge-title-crimson-main {
+  font-family: var(--font-forge-cinema);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  font-size: clamp(2.55rem, 8.6vw, 3.55rem);
 }
 
 @media (min-width: 640px) {
-  .forge-hero-text {
-    font-size: clamp(3.375rem, 6.2vw, 4.75rem); /* Tablet 54-76px */
+  .forge-title-silver-lead {
+    font-size: clamp(2.35rem, 3.8vw, 3.3rem);
+  }
+  .forge-title-silver-main {
+    font-size: clamp(2.8rem, 4.6vw, 4.1rem);
+  }
+  .forge-title-crimson-lead {
+    font-size: clamp(2.7rem, 4.4vw, 3.85rem);
+  }
+  .forge-title-crimson-main {
+    font-size: clamp(3.15rem, 5.2vw, 4.65rem);
   }
 }
 
 @media (min-width: 1024px) {
-  .forge-hero-text {
-    font-size: clamp(4.75rem, 7.8vw, 7.25rem); /* Desktop 76-116px */
+  .forge-title-silver-lead {
+    font-size: clamp(2.4rem, 3vw, 3.75rem);
+  }
+  .forge-title-silver-main {
+    font-size: clamp(2.85rem, 3.8vw, 4.6rem);
+  }
+  .forge-title-crimson-lead {
+    font-size: clamp(2.75rem, 3.55vw, 4.35rem);
+  }
+  .forge-title-crimson-main {
+    font-size: clamp(3.15rem, 4.55vw, 5.35rem);
   }
 }
 
-.forge-headline-offwhite {
-  color: #f8fafc;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.95);
+/* Dual-Layer 3D Extruded Architecture */
+.forge-extruded-line {
+  position: relative;
+  display: block;
 }
 
-.forge-headline-crimson {
-  color: var(--forge-crimson);
+.forge-extruded-depth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+.forge-extruded-face {
+  position: relative;
+  display: block;
+  z-index: 2;
+}
+
+.forge-extruded-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+}
+
+/* Statement 1: Brushed Platinum / Cold Silver 3D Extrusion */
+.forge-depth-silver {
+  color: #171a21;
   text-shadow:
-    0 0 35px rgba(193, 18, 31, 0.45),
-    0 4px 24px rgba(0, 0, 0, 0.95);
+    1px 1px 0 #2b303c,
+    2px 2px 0 #1f232c,
+    3px 3px 0 #14171d,
+    4px 4px 0 #0a0c10,
+    4px 7px 14px rgba(0, 0, 0, 0.92),
+    0 14px 32px rgba(0, 0, 0, 0.78);
 }
 
-/* Cinematic Shimmer Sweep across Crimson text */
-.forge-crimson-sweep {
+.forge-face-silver {
+  color: #F4F4F5;
   background: linear-gradient(
-    105deg,
-    #c1121f 0%,
-    #ff4455 35%,
-    #ffffff 50%,
-    #ff4455 65%,
-    #c1121f 100%
+    174deg,
+    #FFFFFF 0%,
+    #EAECEF 28%,
+    #C7CDD8 68%,
+    #959CA8 100%
   );
-  background-size: 250% 100%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: forgeShimmerSweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.25));
 }
 
-@keyframes forgeShimmerSweep {
+/* Statement 2: Deep Lit Crimson Metallic 3D Extrusion (Stronger Drama) */
+.forge-depth-crimson {
+  color: #36050c;
+  text-shadow:
+    1px 1px 0 #5b0916,
+    2px 2px 0 #450610,
+    3px 3px 0 #30040a,
+    4px 4px 0 #1d0206,
+    5px 5px 0 #0e0103,
+    0 8px 22px rgba(155, 12, 32, 0.42),
+    0 16px 36px rgba(0, 0, 0, 0.96);
+}
+
+.forge-face-crimson {
+  color: #DF2238;
+  background: linear-gradient(
+    172deg,
+    #F7A8B0 0%,     /* Razor-thin cold/silver-scarlet upper edge catchlight */
+    #E63247 11%,    /* Lit scarlet face */
+    #C41E37 46%,    /* Deep Continental crimson */
+    #8A0E1F 84%,    /* Rich blood-garnet lower curve */
+    #5E0612 100%    /* Dark lower chamfer shadow */
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 -1px 0 rgba(255, 215, 220, 0.2))
+    drop-shadow(0 0 18px rgba(196, 30, 55, 0.24));
+}
+
+/* One-Shot Reveal Specular Light Sweep (Clipped Strictly Inside Letterforms) */
+.forge-sweep-silver {
+  background: linear-gradient(
+    108deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.85) 50%,
+    transparent 65%
+  );
+  background-size: 260% 100%;
+  background-position: 160% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  animation: forgeRevealSweep 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
+}
+
+.forge-sweep-crimson {
+  background: linear-gradient(
+    108deg,
+    transparent 35%,
+    rgba(255, 210, 215, 0.72) 48%,
+    rgba(255, 92, 108, 0.88) 52%,
+    transparent 65%
+  );
+  background-size: 260% 100%;
+  background-position: 160% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  animation: forgeRevealSweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+@keyframes forgeRevealSweep {
   0% {
-    background-position: 250% 0;
+    background-position: 155% 0;
+    opacity: 0;
   }
-  40% {
-    background-position: -50% 0;
+  20% {
+    opacity: 0.75;
+  }
+  80% {
+    opacity: 0.55;
   }
   100% {
-    background-position: -50% 0;
+    background-position: -65% 0;
+    opacity: 0;
   }
+}
+
+/* Glossy Obsidian / Black Marble Floor Reflection Stage */
+.forge-floor-stage {
+  position: relative;
+  width: 100%;
+  margin-top: -0.1em;
+}
+
+.forge-floor-horizon {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  max-width: 620px;
+  background: linear-gradient(
+    90deg,
+    rgba(196, 30, 55, 0.12) 0%,
+    rgba(196, 30, 55, 0.42) 14%,
+    rgba(223, 34, 56, 0.25) 45%,
+    rgba(244, 244, 245, 0.09) 72%,
+    transparent 96%
+  );
+  z-index: 2;
+}
+
+.forge-floor-spill {
+  position: absolute;
+  top: -12px;
+  left: -2%;
+  width: 82%;
+  max-width: 560px;
+  height: 54px;
+  background: radial-gradient(
+    ellipse 62% 75% at 28% 20%,
+    rgba(182, 18, 38, 0.16) 0%,
+    rgba(105, 8, 22, 0.06) 52%,
+    transparent 85%
+  );
+  filter: blur(14px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.forge-reflection-mask-wrap {
+  position: relative;
+  width: 100%;
+  height: clamp(2.1rem, 4vw, 3.85rem);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.28) 44%,
+    rgba(0, 0, 0, 0.05) 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.28) 44%,
+    rgba(0, 0, 0, 0.05) 78%,
+    transparent 100%
+  );
+}
+
+/* Anchors baseline of vertically flipped text at visual y=0 right under floor seam */
+.forge-reflection-flipped {
+  transform-origin: top left;
+  transform: translateY(62%) scaleY(-0.62) skewX(-3.5deg);
+  filter: blur(2.1px);
+  opacity: 0.38;
+  will-change: opacity, transform;
+}
+
+.forge-reflect-text-crimson {
+  color: rgba(212, 26, 48, 0.92);
+  text-shadow: 0 0 12px rgba(196, 30, 55, 0.35);
+}
+
+.forge-reflect-text-silver {
+  color: rgba(220, 224, 232, 0.55);
 }
 
 /* Secondary Headings: Space Grotesk (600–700) */
@@ -186,68 +450,157 @@
 }
 
 .forge-chapter-title {
-  font-size: clamp(2.25rem, 4.2vw, 3.75rem); /* Major chapter titles: 36-60px */
+  font-size: clamp(2.25rem, 4.2vw, 3.75rem); /* Major chapter titles */
 }
 
 .forge-supporting-title {
-  font-size: clamp(1.375rem, 2vw, 1.875rem); /* Supporting titles: 22-30px */
+  font-size: clamp(1.375rem, 2vw, 1.875rem); /* Supporting titles */
 }
 
 /* Body Typography: Manrope (400–500) */
 .forge-font-body {
   font-family: var(--font-forge-body);
-  font-size: clamp(1rem, 1.1vw, 1.125rem); /* 16-18px */
-  line-height: 1.68;
-  color: #94a3b8;
+  font-size: clamp(1rem, 1.1vw, 1.125rem);
+  line-height: 1.72;
+  color: #B5BAC4;
+}
+
+/* ==========================================================================
+   THE CREED — EDITORIAL PHILOSOPHY, SERIF STATEMENT & PROCESS SIGNATURE
+   ========================================================================== */
+
+.forge-creed-paragraph {
+  font-family: var(--font-forge-body);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.25vw, 1.1875rem); /* 16px mobile, 18–19px desktop */
+  line-height: 1.76;
+  color: #B3BAC6;
+  letter-spacing: 0.005em;
+}
+
+.forge-creed-emphasis {
+  color: #F2EFE9;
+  font-weight: 500;
+}
+
+.forge-creed-quote-wrap {
+  position: relative;
+  padding-left: 1.125rem;
+}
+
+@media (min-width: 640px) {
+  .forge-creed-quote-wrap {
+    padding-left: 1.375rem;
+  }
+}
+
+.forge-creed-accent {
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 2px;
+  height: calc(100% - 0.85rem);
+  background: linear-gradient(
+    to bottom,
+    #C41E37 0%,
+    rgba(196, 30, 55, 0.55) 65%,
+    transparent 100%
+  );
+}
+
+.forge-creed-quote {
+  font-family: var(--font-forge-serif);
+  font-weight: 600;
+  font-style: normal;
+  font-size: clamp(1.375rem, 2.05vw, 1.9375rem); /* ~22px mobile, 26–31px desktop */
+  line-height: 1.28;
+  letter-spacing: -0.008em;
+  color: #EAE6DF;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+}
+
+.forge-creed-ivory-face {
+  color: #EAE6DF;
+  background: linear-gradient(
+    175deg,
+    #F5F2EC 0%,
+    #EAE6DF 55%,
+    #C5C2BA 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.forge-creed-crimson-end {
+  color: #C92840;
+  background: linear-gradient(
+    172deg,
+    #E2485E 0%,
+    #C41E37 52%,
+    #8C1022 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+}
+
+.forge-creed-step-num {
+  font-family: var(--font-forge-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: #77808E;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.forge-creed-step-num.is-crimson {
+  color: #C41E37;
+}
+
+.forge-creed-step-title {
+  font-family: var(--font-forge-heading);
+  font-weight: 500;
+  font-size: clamp(0.75rem, 0.92vw, 0.875rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #EAE6DF;
+  line-height: 1.2;
+}
+
+.forge-creed-connector {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(196, 30, 55, 0.42) 0%,
+    #282C34 45%,
+    rgba(40, 44, 52, 0.5) 100%
+  );
 }
 
 /* Technical Labels: IBM Plex Mono (400–500) */
 .forge-font-mono {
   font-family: var(--font-forge-mono);
-  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem); /* 11-13px */
+  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 500;
 }
 
-/* Headline Mask Container */
-.forge-mask-container {
-  overflow: hidden;
-  display: block;
+/* Reserved Visual Slot (Clean, currently empty container) */
+.forge-visual-slot {
+  min-height: 0;
 }
-
-/* Word & Character Stagger Token */
-.forge-text-token {
-  display: inline-block;
-  will-change: transform, opacity;
+@media (min-width: 1024px) {
+  .forge-visual-slot {
+    min-height: 380px;
+  }
 }
 
 /* ==========================================================================
-   3D ARCHITECTURAL ENGINEERING ASSEMBLY STAGE
+   METHODOLOGY STAGES & PROJECT CARDS
    ========================================================================== */
-
-.forge-stage-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 580px;
-  aspect-ratio: 1 / 1;
-  margin: 0 auto;
-  perspective: 1400px;
-}
-
-.forge-stage-perspective {
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.35s var(--forge-ease);
-  will-change: transform;
-}
-
-.forge-svg-container {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85));
-}
 
 /* Stage Step Card Containers */
 .forge-step-card {
@@ -276,7 +629,7 @@
 }
 
 .forge-step-card.active {
-  border-color: rgba(193, 18, 31, 0.5);
+  border-color: rgba(196, 30, 55, 0.5);
   background-color: var(--forge-surface-elevated);
   box-shadow:
     0 10px 30px -10px rgba(0, 0, 0, 0.8),
@@ -284,7 +637,7 @@
 }
 
 .forge-step-card:hover {
-  border-color: rgba(193, 18, 31, 0.4);
+  border-color: rgba(196, 30, 55, 0.4);
   transform: translateY(-2px);
 }
 
@@ -320,7 +673,7 @@
 
 .forge-project-card:hover {
   border-color: var(--forge-crimson);
-  box-shadow: 0 0 20px rgba(193, 18, 31, 0.18);
+  box-shadow: 0 0 20px rgba(196, 30, 55, 0.18);
   transform: translateY(-2px);
 }
 
@@ -333,9 +686,9 @@
   width: 2px;
   background: linear-gradient(
     to bottom,
-    rgba(193, 18, 31, 0.8) 0%,
-    rgba(31, 38, 51, 0.5) 50%,
-    rgba(193, 18, 31, 0.8) 100%
+    rgba(196, 30, 55, 0.8) 0%,
+    rgba(40, 44, 52, 0.5) 50%,
+    rgba(196, 30, 55, 0.8) 100%
   );
 }
 
@@ -347,47 +700,22 @@
   text-transform: uppercase;
   padding: 0.25rem 0.625rem;
   background-color: rgba(14, 17, 23, 0.8);
-  border: 1px solid rgba(31, 38, 51, 0.9);
+  border: 1px solid rgba(40, 44, 52, 0.9);
   color: #94a3b8;
   border-radius: 0px;
   transition: all 0.2s ease;
 }
 
 .forge-project-card:hover .forge-tech-pill {
-  border-color: rgba(193, 18, 31, 0.35);
+  border-color: rgba(196, 30, 55, 0.35);
   color: #f1f5f9;
-}
-
-/* Interactive HUD Tooltip on Assembly hover */
-.forge-hud-tooltip {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(10, 13, 18, 0.94);
-  border: 1px solid var(--forge-crimson);
-  padding: 0.625rem 1.125rem;
-  font-family: var(--font-forge-mono);
-  color: #f1f5f9;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  pointer-events: none;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
-  white-space: nowrap;
-  z-index: 20;
 }
 
 /* Reduced Motion Compliance */
 @media (prefers-reduced-motion: reduce) {
-  .forge-stage-perspective {
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .forge-crimson-sweep {
+  .forge-extruded-sweep {
+    display: none !important;
     animation: none !important;
-    background: none !important;
-    -webkit-text-fill-color: var(--forge-crimson) !important;
   }
 
   .forge-project-card::after {
@@ -397,5 +725,537 @@
   .forge-step-card {
     transition: none !important;
     transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   SEAMLESS EVIDENCE-WALL ASSET INTEGRATION (002 / THE FORGE)
+   ========================================================================== */
+
+.forge-wall-stage {
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Desktop right-side ambient investigation wall seamlessly dissolved on left */
+.forge-wall-stage--desktop {
+  position: absolute;
+  top: 49%;
+  right: -4%;
+  width: min(84%, 1140px);
+  aspect-ratio: 1024 / 576;
+  transform: translateY(-50%);
+  z-index: 2;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 14%,
+    rgba(0, 0, 0, 0.18) 26%,
+    rgba(0, 0, 0, 0.56) 38%,
+    rgba(0, 0, 0, 0.92) 48%,
+    #000000 54%,
+    #000000 90.5%,
+    rgba(0, 0, 0, 0.42) 95.5%,
+    transparent 98.8%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 14%,
+    rgba(0, 0, 0, 0.18) 26%,
+    rgba(0, 0, 0, 0.56) 38%,
+    rgba(0, 0, 0, 0.92) 48%,
+    #000000 54%,
+    #000000 90.5%,
+    rgba(0, 0, 0, 0.42) 95.5%,
+    transparent 98.8%
+  );
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .forge-wall-stage--desktop {
+    top: 47%;
+    right: -3%;
+    width: 85%;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.02) 18%,
+      rgba(0, 0, 0, 0.14) 30%,
+      rgba(0, 0, 0, 0.52) 42%,
+      rgba(0, 0, 0, 0.9) 51%,
+      #000000 57%,
+      #000000 90%,
+      rgba(0, 0, 0, 0.4) 95.5%,
+      transparent 98.8%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.02) 18%,
+      rgba(0, 0, 0, 0.14) 30%,
+      rgba(0, 0, 0, 0.52) 42%,
+      rgba(0, 0, 0, 0.9) 51%,
+      #000000 57%,
+      #000000 90%,
+      rgba(0, 0, 0, 0.4) 95.5%,
+      transparent 98.8%
+    );
+  }
+}
+
+/* Tablet & Mobile cleanly framed below manifesto — crops blank left void cleanly */
+.forge-wall-stage--stacked {
+  width: 100%;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  aspect-ratio: 6 / 5;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 5%,
+    #000000 13%,
+    #000000 88%,
+    rgba(0, 0, 0, 0.45) 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.45) 5%,
+    #000000 13%,
+    #000000 88%,
+    rgba(0, 0, 0, 0.45) 95%,
+    transparent 100%
+  );
+}
+
+.forge-wall-motion-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Top and bottom atmospheric feather mask so vertical borders vanish cleanly */
+.forge-wall-vfade {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.65) 3.5%,
+    #000000 8%,
+    #000000 91%,
+    rgba(0, 0, 0, 0.55) 96.5%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.65) 3.5%,
+    #000000 8%,
+    #000000 91%,
+    rgba(0, 0, 0, 0.55) 96.5%,
+    transparent 100%
+  );
+}
+
+.forge-wall-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.forge-wall-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  filter: contrast(1.03) saturate(0.95);
+}
+
+/* Focused crop on tablet/mobile keeps left schematics + all 5 stages without blank void */
+.forge-wall-stage--stacked .forge-wall-img {
+  object-position: 82% 50%;
+}
+
+/* Soft environmental lighting match tying warm blacks to #07080B */
+.forge-wall-env-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 8, 11, 0.85) 0%,
+      rgba(7, 8, 11, 0.35) 30%,
+      transparent 52%,
+      rgba(7, 8, 11, 0.25) 94%,
+      #07080B 100%
+    ),
+    radial-gradient(
+      ellipse 78% 82% at 72% 48%,
+      transparent 56%,
+      rgba(7, 8, 11, 0.52) 86%,
+      rgba(7, 8, 11, 0.92) 100%
+    );
+}
+
+.forge-wall-stage--stacked .forge-wall-env-overlay {
+  background: radial-gradient(
+    ellipse 86% 88% at 52% 50%,
+    transparent 60%,
+    rgba(7, 8, 11, 0.5) 88%,
+    rgba(7, 8, 11, 0.94) 100%
+  );
+}
+
+/* ==========================================================================
+   THE ENGINEERING OPERATION (FULL-WIDTH FROM CONCEPT TO EXECUTION CHAPTER)
+   ========================================================================== */
+
+.op-chapter-root {
+  position: relative;
+  background-color: #050608;
+  border-top: 1px solid rgba(40, 44, 52, 0.55);
+  overflow: clip;
+}
+
+.op-chapter-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 52% 38% at 80% 12%,
+      rgba(159, 16, 39, 0.085) 0%,
+      rgba(73, 9, 23, 0.03) 48%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 45% 32% at 75% 88%,
+      rgba(120, 136, 152, 0.055) 0%,
+      transparent 74%
+    );
+}
+
+/* ─── INTRO BAND ─── */
+.op-intro-band {
+  padding-top: clamp(4rem, 9vh, 6.5rem);
+  padding-bottom: clamp(3.5rem, 8vh, 5.5rem);
+  border-bottom: 1px solid rgba(120, 136, 152, 0.16);
+}
+
+.op-intro-title {
+  font-family: var(--font-forge-cinema);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 0.94;
+}
+
+.op-intro-silver {
+  font-size: clamp(2.15rem, 4.4vw, 4.75rem);
+  background: linear-gradient(174deg, #F5F5F5 0%, #D9DEE5 45%, #8D96A5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.op-intro-crimson {
+  font-size: clamp(3.15rem, 6.4vw, 6.75rem); /* EXECUTION dominant 64-108px desktop */
+  background: linear-gradient(172deg, #F09AA4 0%, #DF2238 18%, #9F1027 65%, #5E0612 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 18px rgba(159, 16, 39, 0.25));
+}
+
+.op-intro-subtitle {
+  font-family: var(--font-forge-heading);
+  font-weight: 500;
+  font-size: clamp(0.875rem, 1.15vw, 1.125rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  max-width: 40rem;
+}
+
+.op-intro-blueprint {
+  position: relative;
+  background: radial-gradient(ellipse 90% 90% at 54% 48%, rgba(16, 19, 25, 0.65) 0%, transparent 88%);
+}
+
+/* Direct Phase Jump Pills */
+.op-jump-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(40, 44, 52, 0.95);
+  background: rgba(14, 17, 23, 0.8);
+  color: #94a3b8;
+  font-family: var(--font-forge-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: border-color 0.22s ease, color 0.22s ease, background-color 0.22s ease;
+}
+
+.op-jump-pill:hover,
+.op-jump-pill.is-active {
+  border-color: #C41E37;
+  color: #F4F4F5;
+  background: rgba(196, 30, 55, 0.1);
+}
+
+.op-jump-num {
+  color: #C41E37;
+  font-weight: 600;
+}
+
+.op-jump-label {
+  white-space: nowrap;
+}
+
+/* ─── VERTICAL PROCESS SPINE ─── */
+.op-stages-container {
+  position: relative;
+}
+
+.op-spine-column {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  z-index: 15;
+}
+
+.op-spine-track {
+  position: absolute;
+  left: 19px;
+  top: 3.5rem;
+  bottom: 4.5rem;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(120, 136, 152, 0.12) 0%,
+    rgba(120, 136, 152, 0.32) 15%,
+    rgba(120, 136, 152, 0.32) 85%,
+    rgba(120, 136, 152, 0.1) 100%
+  );
+  overflow: hidden;
+}
+
+.op-spine-fill {
+  width: 100%;
+  height: 100%;
+  transform-origin: top center;
+  background: linear-gradient(
+    to bottom,
+    #9F1027 0%,
+    #DF2238 65%,
+    #C41E37 100%
+  );
+}
+
+.op-spine-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.op-spine-dot {
+  width: 10px;
+  height: 10px;
+  margin-left: 11px;
+  border: 1.5px solid #64748b;
+  background: #050608;
+  transform: rotate(45deg);
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.op-spine-num {
+  font-family: var(--font-forge-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: #64748b;
+  transition: color 0.25s ease;
+}
+
+.op-spine-node:hover .op-spine-num,
+.op-spine-node.is-active .op-spine-num {
+  color: #F4F4F5;
+  font-weight: 600;
+}
+
+.op-spine-node.is-active .op-spine-dot {
+  border-color: #DF2238;
+  background: #C41E37;
+  box-shadow: 0 0 10px rgba(223, 34, 56, 0.45);
+}
+
+/* ─── SUBSTANTIAL HORIZONTAL ENGINEERING STAGE BANDS ─── */
+.op-stage-band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: clamp(3rem, 6.5vh, 5rem) 0;
+  border-bottom: 1px solid rgba(120, 136, 152, 0.15);
+  transition: border-color 0.35s ease;
+}
+
+@media (min-width: 1024px) {
+  .op-stage-band {
+    min-height: clamp(470px, 58vh, 630px);
+  }
+}
+
+.op-stage-band.is-active {
+  border-bottom-color: rgba(196, 30, 55, 0.36);
+}
+
+.op-phase-number {
+  font-family: var(--font-forge-mono);
+  font-weight: 600;
+  font-size: clamp(3.75rem, 9.2vw, 9.5rem); /* ~100-152px desktop */
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #4b5563 0%, #262b34 62%, #11141a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+  flex-shrink: 0;
+  transition: opacity 0.35s ease;
+}
+
+.op-stage-band.is-active .op-phase-number {
+  background: linear-gradient(180deg, #D9DEE5 0%, #64748b 56%, #242933 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.op-phase-meta {
+  font-family: var(--font-forge-mono);
+  font-size: clamp(0.75rem, 0.82vw, 0.8125rem); /* 12-13px */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C41E37;
+  font-weight: 600;
+}
+
+.op-phase-title {
+  font-family: var(--font-forge-heading);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.4vw, 3.5rem); /* ~38-56px desktop */
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #F4F4F5;
+}
+
+.op-phase-body {
+  font-family: var(--font-forge-body);
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1.18vw, 1.1875rem); /* 17-19px */
+  line-height: 1.72;
+  color: #B5BAC4;
+  max-width: 40rem;
+}
+
+.op-spec-eyebrow {
+  font-family: var(--font-forge-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.op-spec-metric {
+  font-family: var(--font-forge-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #C41E37;
+  font-weight: 600;
+}
+
+.op-spec-tagline {
+  font-family: var(--font-forge-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.op-spec-desc {
+  font-family: var(--font-forge-body);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #94a3b8;
+}
+
+/* Wide architectural visualization container (seamlessly integrated, zero boxed card look) */
+.op-visual-frame {
+  position: relative;
+  width: 100%;
+  background: radial-gradient(
+    ellipse 86% 86% at 50% 50%,
+    rgba(16, 19, 25, 0.55) 0%,
+    rgba(5, 6, 8, 0.2) 72%,
+    transparent 100%
+  );
+  border-top: 1px solid rgba(120, 136, 152, 0.18);
+  border-bottom: 1px solid rgba(120, 136, 152, 0.14);
+  padding: clamp(0.75rem, 1.8vw, 1.5rem) 0;
+}
+
+/* ─── FINAL OUTCOME BAND ─── */
+.op-outcome-band {
+  padding: clamp(4.5rem, 9vh, 7rem) 0 clamp(4rem, 8vh, 6rem);
+}
+
+.op-outcome-title {
+  font-family: var(--font-forge-cinema);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 0.98;
+  font-size: clamp(2.25rem, 4.6vw, 4.75rem);
+  color: #F4F4F5;
+}
+
+.op-outcome-copy {
+  font-family: var(--font-forge-body);
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+  line-height: 1.68;
+  color: #B5BAC4;
+  max-width: 44rem;
+}
+
+@media (max-width: 639px) {
+  .op-jump-label {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .op-jump-pill,
+  .op-spine-dot,
+  .op-spine-num,
+  .op-stage-band {
+    transition: none !important;
   }
 }

@@ -1,6 +1,6 @@
 /* ==========================================================================
    LIVING THRONE CHARACTER ANIMATION SYSTEM STYLES
-   Cinematic Live Wallpaper Realism
+   Cinematic Layered Anatomical Rig
    ========================================================================== */
 
 .living-character-stage {
@@ -30,7 +30,7 @@
   z-index: 1;
 }
 
-/* Layer 1: Base Seated Body (Trousers, Hands on Armrests, Coat Base) */
+/* Layer 1: Base Seated Body (Trousers, Hands Grounded on Armrests, Coat Base) */
 .living-character-base-body {
   position: absolute;
   inset: 0;
@@ -42,7 +42,7 @@
   will-change: transform;
 }
 
-/* Layer 2: Deformable Chest, Lapels, Shirt & Tie (Independent Breathing) */
+/* Layer 2: Deformable Chest, Lapels, Shirt & Tie (Thoracic Respiration) */
 .living-character-chest-wrap {
   position: absolute;
   left: 39.7135%;
@@ -51,7 +51,7 @@
   height: 20.5078%;
   pointer-events: none;
   z-index: 3;
-  transform-origin: 50% 90%;
+  transform-origin: 50% 92%;
   will-change: transform;
 }
 
@@ -62,7 +62,7 @@
   display: block;
 }
 
-/* Layer 3: Head & Neck */
+/* Layer 3: Head & Neck (Pivots at cervical spine / base of neck) */
 .living-character-head-wrap {
   position: absolute;
   left: 43.6198%;
@@ -82,46 +82,16 @@
   display: block;
 }
 
-/* Layer 4: Biological Eyelids for Blinking */
-.living-character-eyelid {
-  position: absolute;
-  pointer-events: none;
-  z-index: 5;
-  overflow: hidden;
-  will-change: transform, opacity;
-}
-
-.living-character-eyelid--left {
-  left: 46.4844%;
-  top: 25.4883%;
-  width: 2.0833%;
-  height: 1.9531%;
-}
-
-.living-character-eyelid--right {
-  left: 50.3906%;
-  top: 25.1953%;
-  width: 2.0833%;
-  height: 1.9531%;
-}
-
-.living-character-eyelid img {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  display: block;
-}
-
-/* Layer 5: Loose Hair Fringe & Breeze Dynamics */
+/* Layer 3b: Loose Hair Fringe (Attached to head, anchored at root) */
 .living-character-hair-wrap {
   position: absolute;
-  left: 44.9219%;
-  top: 16.6015%;
-  width: 9.7656%;
-  height: 6.8359%;
+  left: 10.5263%;
+  top: 15.3846%;
+  width: 78.9474%;
+  height: 26.9231%;
   pointer-events: none;
   z-index: 6;
-  transform-origin: 50% 10%;
+  transform-origin: 50% 0%;
   will-change: transform;
 }
 
@@ -174,12 +144,8 @@
   .living-character-chest-wrap,
   .living-character-base-body,
   .living-character-head-wrap,
-  .living-character-hair-wrap,
-  .living-character-eyelid {
+  .living-character-hair-wrap {
     transform: none !important;
     transition: none !important;
-  }
-  .living-character-eyelid {
-    opacity: 0 !important;
   }
 }
