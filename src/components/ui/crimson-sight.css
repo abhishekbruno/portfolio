@@ -1,0 +1,126 @@
+/* ==========================================================================
+   THE CRIMSON SIGHT — NEO-NOIR PRECISION CURSOR
+   Palette: Deep Crimson #B91F38 · Polished Silver #B5BBC4 ·
+            Dark Gunmetal #343B45 · Muted Charcoal #15191F
+   Only GPU-composited transform and opacity animate; zero continuous blur/shadow.
+   ========================================================================== */
+
+@media (pointer: fine) {
+  html.cs-cursor-ready body,
+  html.cs-cursor-ready a,
+  html.cs-cursor-ready button,
+  html.cs-cursor-ready [role="button"],
+  html.cs-cursor-ready .interactive-target {
+    cursor: none;
+  }
+
+  /* Always preserve native text-selection & disabled cursors */
+  html.cs-cursor-ready input,
+  html.cs-cursor-ready textarea,
+  html.cs-cursor-ready select,
+  html.cs-cursor-ready [contenteditable="true"] {
+    cursor: text !important;
+  }
+
+  html.cs-cursor-ready [disabled],
+  html.cs-cursor-ready [aria-disabled="true"] {
+    cursor: not-allowed !important;
+  }
+}
+
+/* Element A: Precision Crimson Diamond Core */
+.cs-core {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 140ms ease;
+}
+
+.cs-core-diamond {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e04159 0%, #b91f38 55%, #731021 100%);
+  border: 0.5px solid rgba(181, 187, 196, 0.45);
+  transform: rotate(45deg) scale(1);
+  transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1), opacity 120ms ease;
+}
+
+.cs-core[data-state="active"] .cs-core-diamond {
+  transform: rotate(45deg) scale(1.28);
+  background: linear-gradient(135deg, #f25c72 0%, #c92641 55%, #8a1428 100%);
+}
+
+.cs-core[data-state="inspect"] .cs-core-diamond {
+  transform: rotate(45deg) scale(0.85);
+}
+
+.cs-core[data-state="disabled"] .cs-core-diamond {
+  opacity: 0.35;
+  transform: rotate(45deg) scale(0.8);
+}
+
+/* Element B: Floating Brushed-Silver & Gunmetal Ring (34px) */
+.cs-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 160ms ease;
+}
+
+.cs-ring-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transform: scale(1);
+  transition: transform 145ms cubic-bezier(0.16, 1, 0.3, 1), opacity 145ms ease;
+}
+
+.cs-ring-accent {
+  opacity: 0.72;
+  transition: opacity 145ms ease;
+}
+
+.cs-ring[data-state="hover"] .cs-ring-svg {
+  transform: scale(1.24);
+}
+
+.cs-ring[data-state="hover"] .cs-ring-accent {
+  opacity: 1;
+}
+
+.cs-ring[data-state="active"] .cs-ring-svg {
+  transform: scale(0.82);
+}
+
+.cs-ring[data-state="active"] .cs-ring-accent {
+  opacity: 1;
+}
+
+.cs-ring[data-state="inspect"] .cs-ring-svg {
+  transform: scale(1.12);
+  opacity: 0.72;
+}
+
+.cs-ring[data-state="disabled"] .cs-ring-svg {
+  transform: scale(0.9);
+  opacity: 0.32;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .cs-core,
+  .cs-ring {
+    display: none !important;
+  }
+}

@@ -4,12 +4,19 @@ import { navLinks, personalInfo } from '../../data/portfolio';
 import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Navbar({ activeSection, isDark, onToggleTheme, isHidden = false }) {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() =>
+    typeof window !== 'undefined' ? window.scrollY > 30 : false
+  );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let prevScrolled = window.scrollY > 30;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      const nextScrolled = window.scrollY > 30;
+      if (nextScrolled !== prevScrolled) {
+        prevScrolled = nextScrolled;
+        setScrolled(nextScrolled);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

@@ -24,7 +24,6 @@
   /* Distinctive Scoped Typography System */
   --font-forge-cinema: 'Oswald', 'Bebas Neue', sans-serif;
   --font-forge-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-forge-hero: 'Syne', sans-serif;
   --font-forge-heading: 'Space Grotesk', sans-serif;
   --font-forge-body: 'Manrope', system-ui, -apple-system, sans-serif;
   --font-forge-mono: 'IBM Plex Mono', monospace;
@@ -53,7 +52,7 @@
   -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 45%, #000 30%, transparent 82%);
 }
 
-/* Restrained Atmospheric Crimson Practical Spill */
+/* Restrained Atmospheric Crimson Practical Spill (soft gradient without costly blur() filter) */
 .forge-heat-flare {
   position: absolute;
   top: 6%;
@@ -65,11 +64,10 @@
   pointer-events: none;
   background: radial-gradient(
     circle at center,
-    rgba(168, 16, 36, 0.12) 0%,
-    rgba(92, 6, 18, 0.04) 44%,
-    transparent 72%
+    rgba(168, 16, 36, 0.1) 0%,
+    rgba(92, 6, 18, 0.038) 44%,
+    transparent 74%
   );
-  filter: blur(60px);
   z-index: 1;
 }
 
@@ -84,11 +82,10 @@
   pointer-events: none;
   background: radial-gradient(
     circle at center,
-    rgba(203, 213, 225, 0.035) 0%,
-    rgba(30, 41, 59, 0.018) 50%,
+    rgba(203, 213, 225, 0.03) 0%,
+    rgba(30, 41, 59, 0.014) 50%,
     transparent 75%
   );
-  filter: blur(60px);
   z-index: 1;
 }
 
@@ -449,22 +446,6 @@
   line-height: 1.15;
 }
 
-.forge-chapter-title {
-  font-size: clamp(2.25rem, 4.2vw, 3.75rem); /* Major chapter titles */
-}
-
-.forge-supporting-title {
-  font-size: clamp(1.375rem, 2vw, 1.875rem); /* Supporting titles */
-}
-
-/* Body Typography: Manrope (400–500) */
-.forge-font-body {
-  font-family: var(--font-forge-body);
-  font-size: clamp(1rem, 1.1vw, 1.125rem);
-  line-height: 1.72;
-  color: #B5BAC4;
-}
-
 /* ==========================================================================
    THE CREED — EDITORIAL PHILOSOPHY, SERIF STATEMENT & PROCESS SIGNATURE
    ========================================================================== */
@@ -579,119 +560,6 @@
   );
 }
 
-/* Technical Labels: IBM Plex Mono (400–500) */
-.forge-font-mono {
-  font-family: var(--font-forge-mono);
-  font-size: clamp(0.6875rem, 0.8vw, 0.8125rem);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-/* Reserved Visual Slot (Clean, currently empty container) */
-.forge-visual-slot {
-  min-height: 0;
-}
-@media (min-width: 1024px) {
-  .forge-visual-slot {
-    min-height: 380px;
-  }
-}
-
-/* ==========================================================================
-   METHODOLOGY STAGES & PROJECT CARDS
-   ========================================================================== */
-
-/* Stage Step Card Containers */
-.forge-step-card {
-  position: relative;
-  background-color: var(--forge-surface);
-  border: 1px solid var(--forge-border);
-  padding: 1.75rem 2rem;
-  transition: all 0.3s var(--forge-ease);
-  backdrop-filter: blur(8px);
-}
-
-.forge-step-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 0%;
-  background-color: var(--forge-crimson);
-  box-shadow: 0 0 12px var(--forge-crimson);
-  transition: height 0.35s var(--forge-ease);
-}
-
-.forge-step-card.active::before {
-  height: 100%;
-}
-
-.forge-step-card.active {
-  border-color: rgba(196, 30, 55, 0.5);
-  background-color: var(--forge-surface-elevated);
-  box-shadow:
-    0 10px 30px -10px rgba(0, 0, 0, 0.8),
-    0 0 25px -5px var(--forge-crimson-dim);
-}
-
-.forge-step-card:hover {
-  border-color: rgba(196, 30, 55, 0.4);
-  transform: translateY(-2px);
-}
-
-/* Real Project Showcase Card inside Stages */
-.forge-project-card {
-  display: block;
-  background: linear-gradient(135deg, rgba(14, 17, 23, 0.95) 0%, rgba(19, 23, 34, 0.85) 100%);
-  border: 1px solid var(--forge-border);
-  padding: 1.25rem 1.5rem;
-  transition: all 0.25s var(--forge-ease);
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.forge-project-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-}
-
-.forge-project-card:hover::after {
-  transform: translateX(100%);
-}
-
-.forge-project-card:hover {
-  border-color: var(--forge-crimson);
-  box-shadow: 0 0 20px rgba(196, 30, 55, 0.18);
-  transform: translateY(-2px);
-}
-
-/* Timeline vertical rail */
-.forge-timeline-rail {
-  position: absolute;
-  left: 23px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(
-    to bottom,
-    rgba(196, 30, 55, 0.8) 0%,
-    rgba(40, 44, 52, 0.5) 50%,
-    rgba(196, 30, 55, 0.8) 100%
-  );
-}
-
 /* Technical Specification Pill */
 .forge-tech-pill {
   font-family: var(--font-forge-mono);
@@ -706,25 +574,11 @@
   transition: all 0.2s ease;
 }
 
-.forge-project-card:hover .forge-tech-pill {
-  border-color: rgba(196, 30, 55, 0.35);
-  color: #f1f5f9;
-}
-
 /* Reduced Motion Compliance */
 @media (prefers-reduced-motion: reduce) {
   .forge-extruded-sweep {
     display: none !important;
     animation: none !important;
-  }
-
-  .forge-project-card::after {
-    display: none !important;
-  }
-
-  .forge-step-card {
-    transition: none !important;
-    transform: none !important;
   }
 }
 
@@ -738,7 +592,7 @@
   user-select: none;
 }
 
-/* Desktop right-side ambient investigation wall seamlessly dissolved on left */
+/* Desktop right-side ambient investigation wall (edge-blended without costly CSS mask-image) */
 .forge-wall-stage--desktop {
   position: absolute;
   top: 49%;
@@ -747,30 +601,7 @@
   aspect-ratio: 1024 / 576;
   transform: translateY(-50%);
   z-index: 2;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.03) 14%,
-    rgba(0, 0, 0, 0.18) 26%,
-    rgba(0, 0, 0, 0.56) 38%,
-    rgba(0, 0, 0, 0.92) 48%,
-    #000000 54%,
-    #000000 90.5%,
-    rgba(0, 0, 0, 0.42) 95.5%,
-    transparent 98.8%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.03) 14%,
-    rgba(0, 0, 0, 0.18) 26%,
-    rgba(0, 0, 0, 0.56) 38%,
-    rgba(0, 0, 0, 0.92) 48%,
-    #000000 54%,
-    #000000 90.5%,
-    rgba(0, 0, 0, 0.42) 95.5%,
-    transparent 98.8%
-  );
+  overflow: hidden;
 }
 
 @media (min-width: 1024px) and (max-width: 1279px) {
@@ -778,34 +609,10 @@
     top: 47%;
     right: -3%;
     width: 85%;
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0, 0, 0, 0.02) 18%,
-      rgba(0, 0, 0, 0.14) 30%,
-      rgba(0, 0, 0, 0.52) 42%,
-      rgba(0, 0, 0, 0.9) 51%,
-      #000000 57%,
-      #000000 90%,
-      rgba(0, 0, 0, 0.4) 95.5%,
-      transparent 98.8%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0, 0, 0, 0.02) 18%,
-      rgba(0, 0, 0, 0.14) 30%,
-      rgba(0, 0, 0, 0.52) 42%,
-      rgba(0, 0, 0, 0.9) 51%,
-      #000000 57%,
-      #000000 90%,
-      rgba(0, 0, 0, 0.4) 95.5%,
-      transparent 98.8%
-    );
   }
 }
 
-/* Tablet & Mobile cleanly framed below manifesto — crops blank left void cleanly */
+/* Tablet & Mobile cleanly framed below manifesto — crops blank left void without mask-image */
 .forge-wall-stage--stacked {
   width: 100%;
   max-width: 650px;
@@ -813,24 +620,6 @@
   margin-right: auto;
   aspect-ratio: 6 / 5;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.45) 5%,
-    #000000 13%,
-    #000000 88%,
-    rgba(0, 0, 0, 0.45) 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.45) 5%,
-    #000000 13%,
-    #000000 88%,
-    rgba(0, 0, 0, 0.45) 95%,
-    transparent 100%
-  );
 }
 
 .forge-wall-motion-frame {
@@ -839,79 +628,162 @@
   height: 100%;
 }
 
-/* Top and bottom atmospheric feather mask so vertical borders vanish cleanly */
 .forge-wall-vfade {
   position: relative;
   width: 100%;
   height: 100%;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.65) 3.5%,
-    #000000 8%,
-    #000000 91%,
-    rgba(0, 0, 0, 0.55) 96.5%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 0, 0, 0.65) 3.5%,
-    #000000 8%,
-    #000000 91%,
-    rgba(0, 0, 0, 0.55) 96.5%,
-    transparent 100%
-  );
 }
 
-.forge-wall-picture {
-  display: block;
+.forge-wall-canvas {
+  position: relative;
   width: 100%;
   height: 100%;
+}
+
+/* On tablet & mobile (<1024px) preserve exact 1024/576 overlay alignment inside the 6/5 viewport */
+.forge-wall-stage--stacked .forge-wall-canvas {
+  position: absolute;
+  top: 0;
+  right: -1.5%;
+  height: 100%;
+  width: calc(100% * 1024 / 576 * 5 / 6);
+}
+
+.forge-wall-img,
+.forge-wall-anchors-img,
+.forge-wall-threads-svg,
+.forge-wall-dust-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 .forge-wall-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center right;
+  z-index: 1;
   filter: contrast(1.03) saturate(0.95);
 }
 
-/* Focused crop on tablet/mobile keeps left schematics + all 5 stages without blank void */
-.forge-wall-stage--stacked .forge-wall-img {
-  object-position: 82% 50%;
+.forge-wall-paper-shadow {
+  position: absolute;
+  z-index: 2;
+  background: radial-gradient(ellipse 92% 92% at 52% 54%, rgba(0, 0, 0, 0.85) 35%, rgba(0, 0, 0, 0) 92%);
+  pointer-events: none;
+  opacity: 0.36;
+  will-change: transform, opacity;
 }
 
-/* Soft environmental lighting match tying warm blacks to #07080B */
+.forge-wall-paper-sprite {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  pointer-events: none;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.forge-wall-anchors-img {
+  z-index: 4;
+}
+
+.forge-wall-threads-svg {
+  z-index: 5;
+  overflow: visible;
+}
+
+/* Overhead lamp filament & conical practical beam over the investigation board */
+.forge-wall-lamp-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 18% 7% at 74% 9.5%,
+      rgba(255, 228, 186, 0.28) 0%,
+      rgba(255, 178, 108, 0.10) 52%,
+      transparent 88%
+    ),
+    radial-gradient(
+      ellipse 38% 58% at 73% 30%,
+      rgba(255, 198, 134, 0.085) 0%,
+      rgba(218, 128, 66, 0.035) 48%,
+      transparent 82%
+    );
+  mix-blend-mode: screen;
+}
+
+/* Local electrical brownout shadow veil confined strictly to board area (zero page-wide dim) */
+.forge-wall-shadow-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(
+      ellipse 36% 64% at 73% 38%,
+      rgba(4, 3, 5, 0.82) 0%,
+      rgba(4, 3, 5, 0.62) 60%,
+      rgba(4, 3, 5, 0) 94%
+    );
+}
+
+.forge-wall-dust-canvas {
+  z-index: 8;
+}
+
+/* Overlaid solid #07080B edge feathering (0% mask-image compositing cost, identical visual dissolve) */
 .forge-wall-env-overlay {
   position: absolute;
   inset: 0;
+  z-index: 9;
+  pointer-events: none;
   background:
     linear-gradient(
       90deg,
-      rgba(7, 8, 11, 0.85) 0%,
-      rgba(7, 8, 11, 0.35) 30%,
-      transparent 52%,
-      rgba(7, 8, 11, 0.25) 94%,
-      #07080B 100%
+      #07080B 0%,
+      #07080B 14%,
+      rgba(7, 8, 11, 0.88) 28%,
+      rgba(7, 8, 11, 0.48) 41%,
+      rgba(7, 8, 11, 0.10) 51%,
+      transparent 58%,
+      transparent 88%,
+      rgba(7, 8, 11, 0.62) 95.5%,
+      #07080B 99.2%
     ),
-    radial-gradient(
-      ellipse 78% 82% at 72% 48%,
-      transparent 56%,
-      rgba(7, 8, 11, 0.52) 86%,
-      rgba(7, 8, 11, 0.92) 100%
+    linear-gradient(
+      180deg,
+      #07080B 0%,
+      rgba(7, 8, 11, 0.45) 4%,
+      transparent 10%,
+      transparent 89%,
+      rgba(7, 8, 11, 0.52) 95.5%,
+      #07080B 100%
     );
 }
 
 .forge-wall-stage--stacked .forge-wall-env-overlay {
-  background: radial-gradient(
-    ellipse 86% 88% at 52% 50%,
-    transparent 60%,
-    rgba(7, 8, 11, 0.5) 88%,
-    rgba(7, 8, 11, 0.94) 100%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      #07080B 0%,
+      rgba(7, 8, 11, 0.65) 6%,
+      transparent 16%,
+      transparent 86%,
+      rgba(7, 8, 11, 0.65) 95%,
+      #07080B 100%
+    ),
+    linear-gradient(
+      180deg,
+      #07080B 0%,
+      transparent 10%,
+      transparent 89%,
+      #07080B 100%
+    );
 }
 
 /* ==========================================================================
@@ -1053,15 +925,134 @@
 }
 
 .op-spine-fill {
+  position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   transform-origin: top center;
   background: linear-gradient(
     to bottom,
-    #9F1027 0%,
-    #DF2238 65%,
-    #C41E37 100%
+    #650D1D 0%,
+    #CC1838 72%,
+    #9F1027 100%
   );
+}
+
+.op-spine-current {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 18%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(204, 24, 56, 0.5) 28%,
+    rgba(242, 99, 117, 0.96) 68%,
+    transparent 100%
+  );
+  will-change: transform, opacity;
+  animation: opSpinePulse 6.5s cubic-bezier(0.32, 0.04, 0.22, 1) infinite;
+}
+
+.op-stage-channel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.op-stage-channel-pulse {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28%;
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(101, 13, 29, 0.4) 20%,
+    rgba(204, 24, 56, 0.92) 70%,
+    rgba(242, 99, 117, 0.96) 88%,
+    transparent 100%
+  );
+}
+
+.op-stage-band.is-active .op-stage-channel-pulse {
+  opacity: 0.92;
+  will-change: transform, opacity;
+  animation: opStageChannelSweep 5.2s cubic-bezier(0.32, 0.02, 0.2, 1) infinite;
+}
+
+.op-stage-band.is-active .op-visual-frame {
+  border-top-color: rgba(204, 24, 56, 0.36);
+  box-shadow: inset 0 1px 0 rgba(242, 99, 117, 0.12);
+}
+
+.op-svg-current-flow {
+  stroke-dasharray: 38 240;
+  animation: opSvgCurrentDash 3.6s linear infinite;
+}
+
+.op-svg-current-flow--intro {
+  stroke-dasharray: 54 320;
+  animation-duration: 5.5s;
+}
+
+.op-svg-current-flow--outcome {
+  stroke-dasharray: 72 420;
+  animation-duration: 4.8s;
+}
+
+.op-chapter-paused .op-spine-current,
+.op-chapter-paused .op-stage-channel-pulse,
+.op-chapter-paused .op-svg-current-flow {
+  animation-play-state: paused !important;
+}
+
+@keyframes opSpinePulse {
+  0%, 15% { transform: translate3d(0, -120%, 0); opacity: 0; }
+  30% { opacity: 0.95; }
+  80% { opacity: 0.85; }
+  92%, 100% { transform: translate3d(0, 620%, 0); opacity: 0; }
+}
+
+@keyframes opStageChannelSweep {
+  0%, 14% { transform: translate3d(-110%, 0, 0); opacity: 0; }
+  26% { opacity: 0.92; }
+  75% { opacity: 0.78; }
+  90%, 100% { transform: translate3d(380%, 0, 0); opacity: 0; }
+}
+
+@keyframes opSvgCurrentDash {
+  0% { stroke-dashoffset: 278; opacity: 0.35; }
+  25% { opacity: 0.95; }
+  85% { opacity: 0.85; }
+  100% { stroke-dashoffset: 0; opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .op-jump-pill,
+  .op-spine-dot,
+  .op-spine-num,
+  .op-stage-band {
+    transition: none !important;
+  }
+  .op-spine-current,
+  .op-stage-channel-pulse,
+  .op-svg-current-flow,
+  .forge-wall-paper-sprite,
+  .forge-wall-paper-shadow {
+    animation: none !important;
+    will-change: auto !important;
+  }
+  .op-spine-current,
+  .op-stage-channel-pulse {
+    display: none !important;
+  }
 }
 
 .op-spine-node {
@@ -1252,10 +1243,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .op-jump-pill,
-  .op-spine-dot,
-  .op-spine-num,
-  .op-stage-band {
-    transition: none !important;
+  .forge-wall-dust-canvas {
+    display: none !important;
   }
 }

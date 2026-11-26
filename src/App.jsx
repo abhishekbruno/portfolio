@@ -18,6 +18,8 @@ const GithubSection = React.lazy(() => import('./sections/GithubSection'));
 const Experience = React.lazy(() => import('./sections/Experience'));
 const Contact = React.lazy(() => import('./sections/Contact'));
 
+const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'github', 'experience', 'contact'];
+
 function App() {
   const { toggleTheme, isDark } = useTheme();
   const [, setSceneReady] = useState(false);
@@ -66,8 +68,7 @@ function App() {
     }
   }, [revealPhase]);
 
-  const sectionIds = ['hero', 'about', 'skills', 'projects', 'github', 'experience', 'contact'];
-  const activeSection = useScrollSpy(sectionIds, 140);
+  const activeSection = useScrollSpy(SECTION_IDS, 140);
 
   return (
     <div className="relative min-h-screen bg-[#080808] light:bg-[#f4f4f4] text-[#F5F5F5] light:text-[#0d0d0d] font-body transition-colors duration-300">

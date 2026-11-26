@@ -408,6 +408,13 @@
   transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.skills-index-num { color: #666666; }
+.skills-index-name { color: #a1a1a1; }
+.skills-index-item:hover .skills-index-name,
+.skills-index-item--active .skills-index-name { color: #ffffff; font-weight: 600; }
+.skills-index-item:hover .skills-index-num,
+.skills-index-item--active .skills-index-num { color: #c69b5c; font-weight: 700; }
+
 .skills-index-item:hover .skills-index-indicator,
 .skills-index-item--active .skills-index-indicator {
   width: 100%;
@@ -420,13 +427,19 @@
   transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-6px) !important;
 }
 
-/* Ambient Cursor Lighting Follower */
+/* Ambient Cursor Lighting Follower (Fixed-size GPU-composited spotlight sprite, zero gradient repaints) */
 .skills-ambient-cursor-glow {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(198, 155, 92, 0.045) 0%, transparent 70%);
+  transform: translate3d(50vw, 30vh, 0);
+  will-change: transform;
   pointer-events: none;
   opacity: 0.85;
-  transition: opacity 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

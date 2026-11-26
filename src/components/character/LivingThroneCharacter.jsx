@@ -3,7 +3,6 @@ import { useReducedMotion } from 'framer-motion';
 import { BreathingController } from './BreathingController';
 import { HeadMotionController } from './HeadMotionController';
 import { HairDynamics } from './HairDynamics';
-import { PostureController } from './PostureController';
 import { CharacterMotionConfig } from './CharacterMotionConfig';
 
 // Layered asset representations extracted from the original portrait
@@ -51,26 +50,24 @@ export default function LivingThroneCharacter() {
     const breathing = new BreathingController(CharacterMotionConfig.respiration);
     const headMotion = new HeadMotionController(CharacterMotionConfig.head);
     const hair = new HairDynamics(CharacterMotionConfig.hair);
-    const posture = new PostureController(CharacterMotionConfig.posture);
 
-    let animationFrameId;
-    let isVisible = true;
+    let animationFrameId = 0;
+    let isVisible = false;
+    let isPageVisible = !document.hidden;
     let parallaxX = 0;
     let parallaxY = 0;
     let targetParallaxX = 0;
     let targetParallaxY = 0;
     let lastYaw = 0;
 
-    // ─── 1. VISIBILITY-BASED FRAME SUSPENSION ───
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-      },
-      { rootMargin: '100px 0px', threshold: 0 }
-    );
-    observer.observe(stageEl);
+    let prevBodyTr = '';
+    let prevChestTr = '';
+    let prevHeadTr = '';
+    let prevHairTr = '';
 
-    // ─── 2. SUBTLE UNIFIED MOUSE PARALLAX TRACKING ───
+    // ─── 2. SUBTLE UNIFIED MOUSE PARALLAX TRACKING (Desktop & Visible Only) ───
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    let pointerBound = false;
     const handlePointerMove = (e) => {
       const { innerWidth, innerHeight } = window;
       const nx = (e.clientX / innerWidth - 0.5) * 2;
@@ -79,13 +76,24 @@ export default function LivingThroneCharacter() {
       targetParallaxY = ny * CharacterMotionConfig.parallax.maxShiftY;
     };
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    const syncPointerBinding = (shouldBind) => {
+      if (isCoarsePointer) return;
+      if (shouldBind && !pointerBound) {
+        window.addEventListener('pointermove', handlePointerMove, { passive: true });
+        pointerBound = true;
+      } else if (!shouldBind && pointerBound) {
+        window.removeEventListener('pointermove', handlePointerMove);
+        pointerBound = false;
+      }
+    };
 
-    // ─── 3. HIGH-PERFORMANCE 60FPS DIRECT TRANSFORMS LOOP ───
+    // ─── 3. HIGH-PERFORMANCE DIRECT TRANSFORMS LOOP (Paused Cleanly Offscreen) ───
     const animate = (currentTimeMs) => {
+      if (!isVisible || !isPageVisible) {
+        animationFrameId = 0;
+        return;
+      }
       animationFrameId = requestAnimationFrame(animate);
-
-      if (!isVisible) return;
 
       const t = currentTimeMs * 0.001;
 
@@ -96,7 +104,6 @@ export default function LivingThroneCharacter() {
       lastYaw = headState.yawDeg;
 
       const hairState = hair.update(t, headDeltaYaw);
-      posture.update(t);
 
       // Smooth parallax interpolation with unified tracking to prevent layer shearing
       parallaxX += (targetParallaxX - parallaxX) * CharacterMotionConfig.parallax.smoothing;
@@ -106,15 +113,23 @@ export default function LivingThroneCharacter() {
 
       // 1. Base Seated Body: firmly grounded on armrests and throne
       if (baseBodyRef.current) {
-        baseBodyRef.current.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+        const bodyTr = `translate3d(${px}px, ${py}px, 0)`;
+        if (bodyTr !== prevBodyTr) {
+          prevBodyTr = bodyTr;
+          baseBodyRef.current.style.transform = bodyTr;
+        }
       }
 
-      // 2. Chest: perceptible resting respiration (3.2px sternum lift, 2.0% lateral expansion)
+      // 2. Chest: perceptible resting respiration
       if (chestRef.current) {
         const liftY = (-breathState.chestLift + Number(py)).toFixed(2);
         const scaleX = breathState.chestScaleX.toFixed(4);
         const scaleY = breathState.chestScaleY.toFixed(4);
-        chestRef.current.style.transform = `translate3d(${px}px, ${liftY}px, 0) scale(${scaleX}, ${scaleY})`;
+        const chestTr = `translate3d(${px}px, ${liftY}px, 0) scale(${scaleX}, ${scaleY})`;
+        if (chestTr !== prevChestTr) {
+          prevChestTr = chestTr;
+          chestRef.current.style.transform = chestTr;
+        }
       }
 
       // 3. Head & Neck: cervical pivot rotation (yaw/pitch) + breath coupling
@@ -122,23 +137,57 @@ export default function LivingThroneCharacter() {
         const headLiftY = (-breathState.headLift + Number(py)).toFixed(2);
         const yaw = headState.yawDeg.toFixed(2);
         const pitch = headState.pitchDeg.toFixed(2);
-        headRef.current.style.transform = `translate3d(${px}px, ${headLiftY}px, 0) rotate(${yaw}deg) rotateX(${pitch}deg)`;
+        const headTr = `translate3d(${px}px, ${headLiftY}px, 0) rotate(${yaw}deg) rotateX(${pitch}deg)`;
+        if (headTr !== prevHeadTr) {
+          prevHeadTr = headTr;
+          headRef.current.style.transform = headTr;
+        }
       }
 
       // 4. Hair Fringe: hairline anchored to forehead; tip compliance to breeze & inertia
       if (hairRef.current) {
         const tipRot = hairState.tipAngle.toFixed(2);
         const tipSkew = hairState.tipSkew.toFixed(2);
-        hairRef.current.style.transform = `rotate(${tipRot}deg) skewX(${tipSkew}deg)`;
+        const hairTr = `rotate(${tipRot}deg) skewX(${tipSkew}deg)`;
+        if (hairTr !== prevHairTr) {
+          prevHairTr = hairTr;
+          hairRef.current.style.transform = hairTr;
+        }
       }
     };
 
-    animationFrameId = requestAnimationFrame(animate);
+    const syncLoop = () => {
+      const shouldRun = isVisible && isPageVisible;
+      syncPointerBinding(shouldRun);
+      if (shouldRun && !animationFrameId) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else if (!shouldRun && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+    };
+
+    // ─── 1. VISIBILITY-BASED FRAME & LISTENER SUSPENSION ───
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = Boolean(entry?.isIntersecting);
+        syncLoop();
+      },
+      { rootMargin: '0px', threshold: 0 }
+    );
+    observer.observe(stageEl);
+
+    const onVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      syncLoop();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       observer.disconnect();
-      window.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      syncPointerBinding(false);
     };
   }, [shouldReduceMotion]);
 

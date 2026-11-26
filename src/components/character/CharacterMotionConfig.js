@@ -43,15 +43,7 @@ export const CharacterMotionConfig = {
     springDamping: 5.4           // Damping so hair settles smoothly without jitter
   },
 
-  // ─── 4. RESTING POSTURE & GROUNDED HANDS ───
-  posture: {
-    settleInterval: 12.0,
-    settleDuration: 1.8,
-    // Arms and hands remain firmly planted on the ornate wooden armrests (zero sliding)
-    armrestLock: true
-  },
-
-  // ─── 5. CINEMATIC MOUSE PARALLAX ───
+  // ─── 4. CINEMATIC MOUSE PARALLAX ───
   parallax: {
     maxShiftX: 1.8,              // Subtle unified pointer tracking (px)
     maxShiftY: 1.2,

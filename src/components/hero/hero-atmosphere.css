@@ -202,46 +202,144 @@
     );
 }
 
-/* Light Influence 3 & Polished Black Marble Floor Impression (Subtle, no hard horizon cut) */
+/* Light Influence 3 & Polished Reflective Black-Marble Floor */
 .mc-floor-stone {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 36%;
+  height: 27%;
+  overflow: hidden;
   background:
     radial-gradient(
-      ellipse 46% 62% at 54% 96%,
-      rgba(73, 9, 23, 0.22) 0%,
-      rgba(120, 136, 152, 0.085) 42%,
-      transparent 78%
-    ),
-    radial-gradient(
-      ellipse 22% 84% at 74% 88%,
-      rgba(120, 136, 152, 0.115) 0%,
-      rgba(217, 222, 229, 0.045) 38%,
+      ellipse 38% 68% at 69% 18%,
+      rgba(148, 163, 184, 0.12) 0%,
+      rgba(100, 116, 139, 0.055) 42%,
       transparent 76%
     ),
     radial-gradient(
-      ellipse 18% 82% at 88% 90%,
-      rgba(159, 16, 39, 0.165) 0%,
-      rgba(73, 9, 23, 0.075) 45%,
+      ellipse 20% 85% at 79.4% 35%,
+      rgba(159, 16, 39, 0.2) 0%,
+      rgba(73, 9, 23, 0.09) 48%,
       transparent 78%
+    ),
+    radial-gradient(
+      ellipse 16% 80% at 92.2% 35%,
+      rgba(159, 16, 39, 0.14) 0%,
+      rgba(73, 9, 23, 0.06) 46%,
+      transparent 76%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(16, 20, 28, 0.56) 0%,
+      rgba(9, 11, 16, 0.84) 48%,
+      rgba(5, 6, 8, 0.98) 100%
     );
   -webkit-mask-image: linear-gradient(
-    to bottom,
+    90deg,
     transparent 0%,
-    rgba(0, 0, 0, 0.45) 42%,
-    rgba(0, 0, 0, 0.92) 86%,
-    #000000 100%
+    rgba(0, 0, 0, 0.25) 24%,
+    rgba(0, 0, 0, 0.85) 46%,
+    #000000 66%
   );
   mask-image: linear-gradient(
-    to bottom,
+    90deg,
     transparent 0%,
-    rgba(0, 0, 0, 0.45) 42%,
-    rgba(0, 0, 0, 0.92) 86%,
-    #000000 100%
+    rgba(0, 0, 0, 0.25) 24%,
+    rgba(0, 0, 0, 0.85) 46%,
+    #000000 66%
   );
+}
+
+/* Crisp architectural wall-to-floor horizon reflection seam */
+.mc-floor-horizon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 18%,
+    rgba(120, 136, 152, 0.16) 44%,
+    rgba(217, 222, 229, 0.28) 69%,
+    rgba(185, 28, 48, 0.24) 84%,
+    transparent 99%
+  );
+}
+
+.mc-floor-horizon::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: linear-gradient(
+    to bottom,
+    rgba(203, 213, 225, 0.065) 0%,
+    transparent 100%
+  );
+}
+
+.mc-floor-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Specular reflection pool directly beneath the floating 3D AB medallion */
+.mc-floor-medallion-reflection {
+  position: absolute;
+  left: 69%;
+  top: 10%;
+  width: clamp(190px, 23vw, 340px);
+  height: 54%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse 46% 36% at 50% 24%,
+      rgba(226, 232, 240, 0.16) 0%,
+      rgba(148, 163, 184, 0.09) 38%,
+      rgba(159, 16, 39, 0.05) 64%,
+      transparent 82%
+    ),
+    radial-gradient(
+      ellipse 78% 64% at 50% 42%,
+      rgba(120, 136, 152, 0.085) 0%,
+      transparent 76%
+    );
+  pointer-events: none;
+}
+
+/* Stretched vertical reflections of the recessed crimson wall slits */
+.mc-floor-slit-reflection {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    rgba(214, 46, 72, 0.42) 0%,
+    rgba(159, 16, 39, 0.24) 38%,
+    rgba(73, 9, 23, 0.08) 76%,
+    transparent 100%
+  );
+  box-shadow: 0 0 24px 4px rgba(159, 16, 39, 0.24);
+  pointer-events: none;
+}
+
+.mc-floor-slit-reflection--primary {
+  left: 79.4%;
+}
+
+.mc-floor-slit-reflection--secondary {
+  left: 92.2%;
+  opacity: 0.68;
 }
 
 /* Faint polished dark marble stone seam lines tucked low on right floor only */
@@ -336,5 +434,111 @@
   .mc-marble-svg,
   .mc-floor-veins {
     display: none;
+  }
+}
+
+
+/* Dimensional Luxury Noir Title Treatment & Personal Introduction Typography */
+.hero-noir-title {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f3f6 48%, #b9c1cc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.08)) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.9));
+}
+
+.hero-noir-title--bruno {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e6ec 52%, #a8b2bf 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: filter 0.3s ease;
+}
+
+.hero-noir-title--bruno:hover {
+  background: linear-gradient(180deg, #f26375 0%, #cc1838 58%, #7a0c1d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.hero-intro-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(10.5px, 0.78vw, 12px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #adb1ba;
+}
+
+.hero-intro-statement {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.45rem, 2.05vw, 2.05rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.hero-intro-statement--silver {
+  background: linear-gradient(180deg, #edecf0 0%, #dadce2 52%, #bfc4ce 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.08)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85));
+}
+
+.hero-intro-statement--crimson {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(180deg, #d65162 0%, #c83d50 42%, #8f182a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255, 210, 215, 0.08)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.9));
+}
+
+.hero-intro-statement--crimson::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(237, 236, 240, 0.55) 48%, transparent 74%);
+  background-size: 220% 100%;
+  background-position: 140% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hero-intro-statement--crimson.is-sweeping::after {
+  animation: heroCrimsonSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.78s 1 forwards;
+}
+
+@keyframes heroCrimsonSweep {
+  0% { background-position: 140% 0; opacity: 0; }
+  20% { opacity: 0.85; }
+  85% { opacity: 0.65; }
+  100% { background-position: -60% 0; opacity: 0; }
+}
+
+.hero-intro-body {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(0.95rem, 1.05vw, 1.08rem);
+  line-height: 1.6;
+  max-width: 54ch;
+}
+
+.hero-intro-sequence {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(10.5px, 0.78vw, 12px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #adb1ba;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro-statement--crimson.is-sweeping::after {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }

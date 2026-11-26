@@ -104,9 +104,47 @@ export default function CinematicHeroLighting({ layer = 'all' }) {
           {/* Cool silver-blue specular wash framing the right-hand amulet */}
           <div className="mc-light-silver" />
 
-          {/* Subtle polished black-stone floor sheen & stretched column bounce */}
+          {/* Polished reflective black-stone floor plane, perspective seams & light reflections */}
           <div className="mc-floor-stone">
+            <div className="mc-floor-horizon" />
+            <svg
+              className="mc-floor-grid hidden md:block"
+              viewBox="0 0 1440 240"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <defs>
+                <linearGradient id="mcFloorFade" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#9DB0C4" stopOpacity="0.18" />
+                  <stop offset="45%" stopColor="#8898AA" stopOpacity="0.11" />
+                  <stop offset="100%" stopColor="#8898AA" stopOpacity="0.02" />
+                </linearGradient>
+                <linearGradient id="mcFloorHorizFade" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#8898AA" stopOpacity="0" />
+                  <stop offset="32%" stopColor="#8898AA" stopOpacity="0.04" />
+                  <stop offset="68%" stopColor="#CBD5E1" stopOpacity="0.15" />
+                  <stop offset="92%" stopColor="#9F1027" stopOpacity="0.14" />
+                  <stop offset="100%" stopColor="#9F1027" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+
+              {/* Perspective radial stone tile seams */}
+              <line x1="680" y1="0" x2="430" y2="240" stroke="url(#mcFloorFade)" strokeWidth="0.9" />
+              <line x1="810" y1="0" x2="720" y2="240" stroke="url(#mcFloorFade)" strokeWidth="1" />
+              <line x1="940" y1="0" x2="1010" y2="240" stroke="url(#mcFloorFade)" strokeWidth="1.05" />
+              <line x1="1070" y1="0" x2="1300" y2="240" stroke="url(#mcFloorFade)" strokeWidth="1.05" />
+              <line x1="1200" y1="0" x2="1560" y2="240" stroke="url(#mcFloorFade)" strokeWidth="0.95" />
+
+              {/* Horizontal perspective tile courses */}
+              <line x1="360" y1="26" x2="1440" y2="26" stroke="url(#mcFloorHorizFade)" strokeWidth="0.85" />
+              <line x1="320" y1="68" x2="1440" y2="68" stroke="url(#mcFloorHorizFade)" strokeWidth="0.95" />
+              <line x1="280" y1="126" x2="1440" y2="126" stroke="url(#mcFloorHorizFade)" strokeWidth="1" />
+              <line x1="240" y1="196" x2="1440" y2="196" stroke="url(#mcFloorHorizFade)" strokeWidth="0.8" />
+            </svg>
             <div className="mc-floor-veins hidden md:block" />
+            <div className="mc-floor-medallion-reflection" />
+            <span className="mc-floor-slit-reflection mc-floor-slit-reflection--primary hidden lg:block" />
+            <span className="mc-floor-slit-reflection mc-floor-slit-reflection--secondary hidden lg:block" />
           </div>
         </div>
 

@@ -74,6 +74,16 @@ export function IntroBlueprintScene({ reducedMotion }) {
           viewport={{ once: false, amount: 0.25 }}
           transition={{ duration: 1.25, ease: [0.16, 1, 0.3, 1] }}
         />
+        {!reducedMotion && (
+          <path
+            d="M 188 132 L 320 182 L 444 198 L 320 250 L 210 266 L 320 318"
+            stroke="#F26375"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="op-svg-current-flow op-svg-current-flow--intro"
+          />
+        )}
 
         {/* Nodes along structural vertices */}
         {[
@@ -108,7 +118,7 @@ export function IntroBlueprintScene({ reducedMotion }) {
  * Investigative decomposition showing requirement fragments & constraints isolating
  * a highlighted central problem, linked from hypothesis to grounded evidence.
  */
-function Stage01Visual({ reducedMotion }) {
+function Stage01Visual({ isActive, reducedMotion }) {
   const uid = useId().replace(/:/g, '');
   const fragments = [
     { x: 24, y: 42, w: 184, tag: 'SYMPTOM 01', text: 'SINGLE-MODEL DRIFT' },
@@ -120,7 +130,7 @@ function Stage01Visual({ reducedMotion }) {
     <svg viewBox="0 0 640 310" className="w-full h-auto block" fill="none" role="img" aria-label="Problem identification and constraint isolation schematic">
       <defs>
         <radialGradient id={`p1Spot-${uid}`} cx="56%" cy="50%" r="42%">
-          <stop offset="0%" stopColor="#C41E37" stopOpacity="0.2" />
+          <stop offset="0%" stopColor={isActive ? '#CC1838' : '#650D1D'} stopOpacity={isActive ? '0.24' : '0.12'} />
           <stop offset="100%" stopColor="#050608" stopOpacity="0" />
         </radialGradient>
       </defs>
@@ -132,6 +142,15 @@ function Stage01Visual({ reducedMotion }) {
         <path d="M 208 158 L 294 158" />
         <path d="M 208 252 C 248 252, 258 182, 294 170" />
       </g>
+      {isActive && !reducedMotion && (
+        <path
+          d="M 208 158 L 294 158 M 460 158 L 518 158"
+          stroke="#F26375"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          className="op-svg-current-flow"
+        />
+      )}
 
       {/* Fragment nodes */}
       {fragments.map((f) => (
@@ -181,7 +200,7 @@ function Stage01Visual({ reducedMotion }) {
  * Phase 02 — Design the Architecture:
  * Typed boundary schematic detailing Client Interface, IPC Socket Bridge, and Target Runtime.
  */
-function Stage02Visual({ reducedMotion }) {
+function Stage02Visual({ isActive, reducedMotion }) {
   const columns = [
     { x: 22, w: 162, title: 'AI REASONING', sub: 'MCP CLIENT / CODEX', accent: '#788898' },
     { x: 238, w: 164, title: 'IPC SOCKET BRIDGE', sub: 'TYPED JSON SCHEMA', accent: '#C41E37' },
@@ -227,6 +246,15 @@ function Stage02Visual({ reducedMotion }) {
         viewport={{ once: false, amount: 0.25 }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       />
+      {isActive && !reducedMotion && (
+        <path
+          d="M 184 150 L 456 150"
+          stroke="#F26375"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          className="op-svg-current-flow"
+        />
+      )}
       <motion.path
         d="M 456 198 L 402 198 M 238 198 L 184 198"
         stroke="#788898"
@@ -253,7 +281,7 @@ function Stage02Visual({ reducedMotion }) {
  * Phase 03 — Build the System:
  * Modular harness assembly where independent subsystems lock into an active runtime core.
  */
-function Stage03Visual({ reducedMotion }) {
+function Stage03Visual({ isActive, reducedMotion }) {
   const modules = [
     { x: 24, y: 40, name: 'SCHEMA GEN', code: 'json_schema.build()', dx: -10 },
     { x: 24, y: 128, name: 'TEST HARNESS', code: 'assert_mcp_io()', dx: -10 },
@@ -288,6 +316,15 @@ function Stage03Visual({ reducedMotion }) {
         viewport={{ once: false, amount: 0.25 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       />
+      {isActive && !reducedMotion && (
+        <path
+          d="M 218 157 L 294 157 M 470 157 L 518 157"
+          stroke="#F26375"
+          strokeWidth="2.3"
+          strokeLinecap="round"
+          className="op-svg-current-flow"
+        />
+      )}
 
       {/* Core FastMCP Runtime Assembly Block */}
       <g>
@@ -324,7 +361,7 @@ function Stage03Visual({ reducedMotion }) {
  * Verification checkpoints with explicit non-linear crimson corrective feedback loop
  * demonstrating that failed checks route back to refine architecture and code.
  */
-function Stage04Visual({ reducedMotion }) {
+function Stage04Visual({ isActive, reducedMotion }) {
   const checkpoints = [
     { x: 24, label: 'GATE 01', name: 'LIGAND PREP' },
     { x: 184, label: 'GATE 02', name: 'VINA DOCKING' },
@@ -372,6 +409,15 @@ function Stage04Visual({ reducedMotion }) {
         viewport={{ once: false, amount: 0.25 }}
         transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       />
+      {isActive && !reducedMotion && (
+        <path
+          d="M 410 138 C 410 236, 168 236, 90 138"
+          stroke="#F26375"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          className="op-svg-current-flow"
+        />
+      )}
       {/* Arrowhead pointing UP-BACK to Gate 01 / earlier stages */}
       <polygon points="84,146 90,136 97,146" fill="#DF2238" />
 
@@ -388,16 +434,16 @@ function Stage04Visual({ reducedMotion }) {
   );
 }
 
-export function StageEngineeringVisual({ stageIndex, reducedMotion }) {
+export function StageEngineeringVisual({ stageIndex, isActive = false, reducedMotion }) {
   switch (stageIndex) {
     case 0:
-      return <Stage01Visual reducedMotion={reducedMotion} />;
+      return <Stage01Visual isActive={isActive} reducedMotion={reducedMotion} />;
     case 1:
-      return <Stage02Visual reducedMotion={reducedMotion} />;
+      return <Stage02Visual isActive={isActive} reducedMotion={reducedMotion} />;
     case 2:
-      return <Stage03Visual reducedMotion={reducedMotion} />;
+      return <Stage03Visual isActive={isActive} reducedMotion={reducedMotion} />;
     case 3:
     default:
-      return <Stage04Visual reducedMotion={reducedMotion} />;
+      return <Stage04Visual isActive={isActive} reducedMotion={reducedMotion} />;
   }
 }

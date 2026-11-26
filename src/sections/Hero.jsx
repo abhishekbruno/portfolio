@@ -53,8 +53,9 @@ export default function Hero({
   const titleSpacing = useTransform(scrollYProgress, [0, 1], ['0.04em', shouldReduceMotion ? '0.04em' : '0.08em']);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.75, 1], [1, 0.85, 0.3]);
 
-  // Content scroll offset
+  // Content scroll offset & atmospheric scroll fade
   const contentY = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -26]);
+  const atmosphereOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.72, 0.18]);
 
   const scrollToSection = (e, id) => {
     e.preventDefault();
@@ -84,7 +85,7 @@ export default function Hero({
     >
       {/* ─── LAYER 1: Midnight Continental Luxury Architecture & Distant Crimson Illumination ─── */}
       <motion.div
-        style={{ y: yDistantAmbient }}
+        style={{ y: yDistantAmbient, opacity: shouldReduceMotion ? 1 : atmosphereOpacity }}
         className={`absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000 ${
           isAtmosphereVisible ? 'opacity-100' : 'opacity-0'
         }`}
@@ -95,7 +96,7 @@ export default function Hero({
 
       {/* ─── LAYER 2: Midground Specular Silver-Blue Sheen, Floor Stone Wash & Contrast Falloff ─── */}
       <motion.div
-        style={{ y: yMidgroundHaze }}
+        style={{ y: yMidgroundHaze, opacity: shouldReduceMotion ? 1 : atmosphereOpacity }}
         className={`absolute inset-0 pointer-events-none select-none z-0 transition-opacity duration-1000 ${
           isAtmosphereVisible ? 'opacity-100' : 'opacity-0'
         }`}
@@ -164,7 +165,7 @@ export default function Hero({
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
             animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="inline-flex items-center gap-2.5 px-3 py-1 border border-[#292929] bg-[#111111]/90 backdrop-blur-sm mb-6"
+            className="inline-flex items-center gap-2.5 px-3 py-1 border border-[#292929] bg-[#111111]/90 backdrop-blur-sm mb-4"
           >
             <span className="w-1.5 h-1.5 bg-[#C1121F] shadow-[0_0_8px_#C1121F]" />
             <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#D1D1D1]">
@@ -179,7 +180,7 @@ export default function Hero({
               letterSpacing: titleSpacing,
               opacity: titleOpacity
             }}
-            className="mb-2"
+            className="mb-1.5"
           >
             {/* Line 1: ABHISHEK with Vertical Clipping Mask */}
             <div className="overflow-hidden">
@@ -187,7 +188,7 @@ export default function Hero({
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: '100%' }}
                 animate={isContentVisible ? { opacity: 1, y: '0%' } : { opacity: 0, y: '100%' }}
                 transition={{ ...transitionSettings, delay: 0.1 }}
-                className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold text-[#F5F5F5] leading-[0.85] tracking-tight uppercase select-none drop-shadow-2xl"
+                className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[9.25rem] xl:text-[10rem] font-bold hero-noir-title leading-[0.85] tracking-tight uppercase select-none"
               >
                 ABHISHEK
               </motion.h1>
@@ -199,9 +200,9 @@ export default function Hero({
                 initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: '100%' }}
                 animate={isContentVisible ? { opacity: 1, y: '0%' } : { opacity: 0, y: '100%' }}
                 transition={{ ...transitionSettings, delay: 0.24 }}
-                className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-bold text-[#F5F5F5] leading-[0.85] tracking-tight uppercase select-none drop-shadow-2xl"
+                className="font-display text-7xl sm:text-8xl md:text-9xl lg:text-[9.25rem] xl:text-[10rem] font-bold leading-[0.85] tracking-tight uppercase select-none drop-shadow-2xl"
               >
-                <span className="text-[#F5F5F5] hover:text-[#C1121F] transition-colors duration-300">
+                <span className="hero-noir-title--bruno">
                   BRUNO
                 </span>
               </motion.h1>
@@ -214,7 +215,7 @@ export default function Hero({
             animate={isContentVisible ? { scaleX: 1 } : { scaleX: 0 }}
             style={{ originX: 0 }}
             transition={{ duration: 0.6, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-md sm:max-w-lg h-[2px] bg-gradient-to-r from-[#C1121F] via-[#C1121F]/60 to-transparent my-6 shadow-[0_0_10px_#C1121F]"
+            className="w-full max-w-md sm:max-w-lg h-[2px] bg-gradient-to-r from-[#C1121F] via-[#C1121F]/60 to-transparent my-4 shadow-[0_0_10px_#C1121F]"
           />
 
           {/* Sub-Headline Entrance */}
@@ -227,23 +228,78 @@ export default function Hero({
             SOFTWARE ENGINEER <span className="text-[#C1121F]">•</span> AI SYSTEMS <span className="text-[#C1121F]">•</span> CREATIVE DEVELOPMENT
           </motion.h2>
 
-          {/* Editorial Paragraph Slide-up */}
-          <motion.p
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-            animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-            transition={{ duration: 0.6, delay: 0.62, ease: [0.16, 1, 0.3, 1] }}
-            className="font-body text-sm sm:text-base text-[#A1A1A1] max-w-xl leading-relaxed mb-8 drop-shadow"
-          >
-            Engineering intelligent systems, immersive digital experiences, and practical software solutions.
-            Bridging autonomous Model Context Protocol (MCP) integrations with game engine automation and computational research pipelines.
-          </motion.p>
+          {/* ─── PERSONAL INTRODUCTION: CINEMATIC NEO-NOIR STATEMENT ─── */}
+          <div className="mb-6 flex flex-col items-start">
+            {/* 1. Small Introductory Label */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+              animate={isContentVisible ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.45, delay: 0.56 }}
+              className="hero-intro-label flex items-center gap-2.5 mb-2"
+            >
+              <span className="w-4 h-[1px] bg-[#8F182A]" aria-hidden="true" />
+              <span>THE PERSON BEHIND THE SYSTEMS</span>
+            </motion.div>
+
+            {/* 2 & 3. Two-Line Condensed Statement (Brushed Silver + Deep Crimson Metallic) */}
+            <div className="mb-3 flex flex-col items-start">
+              <motion.p
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                transition={{ duration: 0.55, delay: 0.64, ease: [0.16, 1, 0.3, 1] }}
+                className="hero-intro-statement hero-intro-statement--silver"
+              >
+                I DON&apos;T JUST STUDY TECHNOLOGY.
+              </motion.p>
+              <motion.p
+                initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.55, delay: 0.74, ease: [0.16, 1, 0.3, 1] }}
+                data-text="I BUILD WITH IT."
+                className={`hero-intro-statement hero-intro-statement--crimson ${
+                  isContentVisible && !shouldReduceMotion ? 'is-sweeping' : ''
+                }`}
+              >
+                I BUILD WITH IT.
+              </motion.p>
+            </div>
+
+            {/* 4. Personal Description */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{ duration: 0.55, delay: 0.84, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-intro-body space-y-2 mb-3.5"
+            >
+              <p className="text-[#EDECF0]">
+                I&apos;m a Computer Science Engineering student who believes the best way to understand an idea is to bring it to life.
+              </p>
+              <p className="text-[#ADB1BA]">
+                I create intelligent software, automation tools, and interactive experiences—experimenting, learning from what fails, and refining what works.
+              </p>
+            </motion.div>
+
+            {/* 5. Concluding Sequence */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
+              animate={isContentVisible ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.45, delay: 0.94 }}
+              className="hero-intro-sequence flex items-center gap-2"
+            >
+              <span>CURIOSITY</span>
+              <span className="text-[#C83D50]" aria-hidden="true">→</span>
+              <span>CREATION</span>
+              <span className="text-[#C83D50]" aria-hidden="true">→</span>
+              <span>REFINEMENT</span>
+            </motion.div>
+          </div>
 
           {/* Sequential CTA Buttons Reveal */}
           <motion.div
             initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             animate={isContentVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-            transition={{ duration: 0.5, delay: 0.72, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap items-center gap-4 mb-10 w-full sm:w-auto"
+            transition={{ duration: 0.5, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-wrap items-center gap-4 mb-6 w-full sm:w-auto"
           >
             <a
               href="#projects"

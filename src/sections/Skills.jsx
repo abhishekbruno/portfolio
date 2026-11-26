@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Code,
@@ -16,98 +16,176 @@ import ChapterTransition from '../components/layout/ChapterTransition';
 import SkillsThroneBackdrop from '../components/skills/SkillsThroneBackdrop';
 import '../components/skills/skills-throne.css';
 
+const CARD_FACES = {
+  programming: { rank: 'A', suit: '♠', suitName: 'spades' },
+  frontend: { rank: 'K', suit: '♦', suitName: 'diamonds' },
+  'ai-automation': { rank: 'Q', suit: '♥', suitName: 'hearts' },
+  tools: { rank: 'J', suit: '♣', suitName: 'clubs' },
+  exploration: { rank: '10', suit: '♠', suitName: 'spades' }
+};
+
+const CATEGORY_ICONS = {
+  programming: Code,
+  frontend: Layout,
+  'ai-automation': Cpu,
+  tools: Wrench,
+  exploration: Shield
+};
+
+const CATEGORY_NUMBERS = {
+  programming: '01',
+  frontend: '02',
+  'ai-automation': '03',
+  tools: '04',
+  exploration: '05'
+};
+
 export default function Skills() {
   const shouldReduceMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedCard, setExpandedCard] = useState(null);
-  const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  // Original playing-card treatment rather than functional achievement rankings.
-  const cardFaces = {
-    programming: { rank: 'A', suit: '♠', suitName: 'spades' },
-    frontend: { rank: 'K', suit: '♦', suitName: 'diamonds' },
-    'ai-automation': { rank: 'Q', suit: '♥', suitName: 'hearts' },
-    tools: { rank: 'J', suit: '♣', suitName: 'clubs' },
-    exploration: { rank: '10', suit: '♠', suitName: 'spades' }
+  const sectionRectRef = useRef(null);
+  const ambientGlowRef = useRef(null);
+  const ambientRafRef = useRef(0);
+  const ambientTargetRef = useRef({ x: 0, y: 0 });
+  const cardRefs = useRef({});
+  const indexRefs = useRef({});
+  const cardRectsRef = useRef(new WeakMap());
+  const cardRafRef = useRef(new WeakMap());
+  const activeHoverIdRef = useRef(null);
+
+  // Sync card <-> index visual active highlight directly on DOM nodes (0 React re-renders on hover!)
+  const setSyncedCategory = (categoryId) => {
+    const prev = activeHoverIdRef.current;
+    if (prev === categoryId) return;
+    if (prev) {
+      cardRefs.current[prev]?.classList.remove('skills-playing-card--active-synced');
+      indexRefs.current[prev]?.classList.remove('skills-index-item--active');
+    }
+    activeHoverIdRef.current = categoryId;
+    if (categoryId) {
+      cardRefs.current[categoryId]?.classList.add('skills-playing-card--active-synced');
+      indexRefs.current[categoryId]?.classList.add('skills-index-item--active');
+    }
+  };
+
+  const handleSectionPointerEnter = (e) => {
+    if (shouldReduceMotion || e.pointerType !== 'mouse') return;
+    sectionRectRef.current = e.currentTarget.getBoundingClientRect();
   };
 
   const handleSectionPointerMove = (e) => {
-    if (shouldReduceMotion || e.pointerType !== 'mouse') return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    e.currentTarget.style.setProperty('--skills-mouse-x', `${x}px`);
-    e.currentTarget.style.setProperty('--skills-mouse-y', `${y}px`);
+    if (shouldReduceMotion || e.pointerType !== 'mouse' || !ambientGlowRef.current) return;
+    if (!sectionRectRef.current) sectionRectRef.current = e.currentTarget.getBoundingClientRect();
+    const rect = sectionRectRef.current;
+    ambientTargetRef.current.x = e.clientX - rect.left;
+    ambientTargetRef.current.y = e.clientY - rect.top;
+
+    if (!ambientRafRef.current) {
+      ambientRafRef.current = requestAnimationFrame(() => {
+        ambientRafRef.current = 0;
+        const glowEl = ambientGlowRef.current;
+        if (!glowEl) return;
+        const { x, y } = ambientTargetRef.current;
+        glowEl.style.transform = `translate3d(${(x - 275).toFixed(1)}px, ${(y - 275).toFixed(1)}px, 0)`;
+      });
+    }
+  };
+
+  const handleSectionPointerLeave = () => {
+    sectionRectRef.current = null;
+  };
+
+  const handleCardPointerEnter = (event, categoryId) => {
+    setSyncedCategory(categoryId);
+    if (shouldReduceMotion || event.pointerType !== 'mouse') return;
+    cardRectsRef.current.set(event.currentTarget, event.currentTarget.getBoundingClientRect());
   };
 
   const handleCardPointerMove = (event) => {
     if (shouldReduceMotion || event.pointerType !== 'mouse') return;
-    const card = event.currentTarget.querySelector('.skills-playing-card-face');
-    if (!card) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const px = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const py = (event.clientY - bounds.top) / bounds.height - 0.5;
-    card.style.setProperty('--tilt-x', `${(-py * 5).toFixed(2)}deg`);
-    card.style.setProperty('--tilt-y', `${(px * 5).toFixed(2)}deg`);
-    card.style.setProperty('--pointer-x', `${((px + 0.5) * 100).toFixed(0)}%`);
-    card.style.setProperty('--pointer-y', `${((py + 0.5) * 100).toFixed(0)}%`);
+    const container = event.currentTarget;
+    let bounds = cardRectsRef.current.get(container);
+    if (!bounds) {
+      bounds = container.getBoundingClientRect();
+      cardRectsRef.current.set(container, bounds);
+    }
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+
+    if (cardRafRef.current.get(container)) return;
+    const id = requestAnimationFrame(() => {
+      cardRafRef.current.delete(container);
+      const face = container.querySelector('.skills-playing-card-face');
+      if (!face || !bounds.width || !bounds.height) return;
+      const px = (clientX - bounds.left) / bounds.width - 0.5;
+      const py = (clientY - bounds.top) / bounds.height - 0.5;
+      face.style.setProperty('--tilt-x', `${(-py * 5).toFixed(2)}deg`);
+      face.style.setProperty('--tilt-y', `${(px * 5).toFixed(2)}deg`);
+      face.style.setProperty('--pointer-x', `${((px + 0.5) * 100).toFixed(0)}%`);
+      face.style.setProperty('--pointer-y', `${((py + 0.5) * 100).toFixed(0)}%`);
+    });
+    cardRafRef.current.set(container, id);
   };
 
   const resetCardPointer = (event) => {
-    const card = event.currentTarget.querySelector('.skills-playing-card-face');
-    if (!card) return;
-    card.style.setProperty('--tilt-x', '0deg');
-    card.style.setProperty('--tilt-y', '0deg');
+    const container = event.currentTarget;
+    const pending = cardRafRef.current.get(container);
+    if (pending) {
+      cancelAnimationFrame(pending);
+      cardRafRef.current.delete(container);
+    }
+    cardRectsRef.current.delete(container);
+    const face = container.querySelector('.skills-playing-card-face');
+    if (face) {
+      face.style.setProperty('--tilt-x', '0deg');
+      face.style.setProperty('--tilt-y', '0deg');
+    }
   };
 
   const handleIndexClick = (categoryId) => {
-    const cardElement = document.querySelector(`.skills-playing-card--${categoryId}`);
+    const cardElement = cardRefs.current[categoryId];
     if (cardElement) {
       cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setHoveredCategory(categoryId);
+      setSyncedCategory(categoryId);
       const actionButton = cardElement.querySelector('.skills-playing-card-action');
       actionButton?.focus({ preventScroll: true });
     }
   };
 
-  const categoryIcons = {
-    programming: Code,
-    frontend: Layout,
-    'ai-automation': Cpu,
-    tools: Wrench,
-    exploration: Shield
-  };
-
-  const categoryNumbers = {
-    programming: '01',
-    frontend: '02',
-    'ai-automation': '03',
-    tools: '04',
-    exploration: '05'
-  };
-
-  const allSkills = skillsData.categories.flatMap((cat) =>
-    cat.skills.map((skill) => ({
-      ...skill,
-      categoryId: cat.id,
-      categoryName: cat.name,
-      catNumber: categoryNumbers[cat.id] || '00'
-    }))
+  const allSkills = useMemo(
+    () =>
+      skillsData.categories.flatMap((cat) =>
+        cat.skills.map((skill) => ({
+          ...skill,
+          categoryId: cat.id,
+          categoryName: cat.name,
+          catNumber: CATEGORY_NUMBERS[cat.id] || '00'
+        }))
+      ),
+    []
   );
 
-  const filteredSkills = allSkills.filter((skill) => {
-    const matchesCategory = activeCategory === 'all' || skill.categoryId === activeCategory;
-    const matchesSearch =
-      skill.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (skill.highlight && skill.highlight.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const filteredSkills = useMemo(() => {
+    const q = searchQuery.toLowerCase();
+    return allSkills.filter((skill) => {
+      const matchesCategory = activeCategory === 'all' || skill.categoryId === activeCategory;
+      const matchesSearch =
+        !q ||
+        skill.name.toLowerCase().includes(q) ||
+        (skill.highlight && skill.highlight.toLowerCase().includes(q));
+      return matchesCategory && matchesSearch;
+    });
+  }, [allSkills, activeCategory, searchQuery]);
 
   return (
     <section
       id="skills"
+      onPointerEnter={handleSectionPointerEnter}
       onPointerMove={handleSectionPointerMove}
+      onPointerLeave={handleSectionPointerLeave}
       className="py-24 md:py-32 relative border-b border-[#292929] overflow-hidden bg-[#080808]"
     >
       {/* Chapter Transition Laser & Ambient Lighting */}
@@ -131,12 +209,10 @@ export default function Skills() {
           }}
         />
 
-        {/* 3. Pointer-Responsive Ambient Lighting on Desktop */}
+        {/* 3. Pointer-Responsive Ambient Lighting (GPU transform sprite, zero gradient repaints!) */}
         <div
+          ref={ambientGlowRef}
           className="skills-ambient-cursor-glow hidden lg:block"
-          style={{
-            background: 'radial-gradient(550px circle at var(--skills-mouse-x, 50%) var(--skills-mouse-y, 50%), rgba(198, 155, 92, 0.04) 0%, transparent 70%)'
-          }}
         />
 
         {/* 4. Peripheral Atmospheric Dark Vignette */}
@@ -205,7 +281,7 @@ export default function Skills() {
                     : 'border-[#292929] bg-[#111111] text-[#A1A1A1] hover:border-[#C1121F] hover:text-white'
                 }`}
               >
-                {categoryNumbers[cat.id]} / {cat.name}
+                {CATEGORY_NUMBERS[cat.id]} / {cat.name}
               </button>
             ))}
           </div>
@@ -252,31 +328,31 @@ export default function Skills() {
             <div className="skills-portrait-stage">
               <div className="skills-dossier-grid" aria-label="Five technical skill cards framing the seated throne portrait">
                 {skillsData.categories.map((category, idx) => {
-                  const Icon = categoryIcons[category.id] || Cpu;
-                  const num = categoryNumbers[category.id] || '01';
-                  const card = cardFaces[category.id];
+                  const Icon = CATEGORY_ICONS[category.id] || Cpu;
+                  const num = CATEGORY_NUMBERS[category.id] || '01';
+                  const card = CARD_FACES[category.id];
                   const expanded = expandedCard === category.id;
-                  const isHovered = hoveredCategory === category.id;
                   const detailsId = `card-details-${category.id}`;
 
                   return (
                     <motion.article
                       key={category.id}
+                      ref={(node) => {
+                        cardRefs.current[category.id] = node;
+                      }}
                       initial={shouldReduceMotion ? false : { opacity: 0, y: 34, rotateZ: idx % 2 ? 2 : -2 }}
                       whileInView={{ opacity: 1, y: 0, rotateZ: 0 }}
                       viewport={{ once: false, amount: 0.1 }}
                       transition={{ duration: 0.65, delay: Math.min(idx * 0.09, 0.36), ease: [0.16, 1, 0.3, 1] }}
                       onPointerMove={handleCardPointerMove}
-                      onPointerEnter={() => setHoveredCategory(category.id)}
+                      onPointerEnter={(e) => handleCardPointerEnter(e, category.id)}
                       onPointerLeave={(e) => {
                         resetCardPointer(e);
-                        setHoveredCategory(null);
+                        setSyncedCategory(null);
                       }}
-                      onFocus={() => setHoveredCategory(category.id)}
-                      onBlur={() => setHoveredCategory(null)}
-                      className={`skills-playing-card skills-playing-card--${card.suitName} skills-playing-card--${category.id} ${
-                        isHovered ? 'skills-playing-card--active-synced' : ''
-                      }`}
+                      onFocus={() => setSyncedCategory(category.id)}
+                      onBlur={() => setSyncedCategory(null)}
+                      className={`skills-playing-card skills-playing-card--${card.suitName} skills-playing-card--${category.id}`}
                       aria-label={`${category.name} skill category`}
                     >
                       <div className="skills-playing-card-face">
@@ -356,36 +432,28 @@ export default function Skills() {
 
               <nav className="flex flex-col gap-2" role="navigation" aria-label="Skill card quick navigation">
                 {skillsData.categories.map((cat) => {
-                  const num = categoryNumbers[cat.id] || '01';
-                  const isHovered = hoveredCategory === cat.id;
+                  const num = CATEGORY_NUMBERS[cat.id] || '01';
 
                   return (
                     <button
                       key={cat.id}
+                      ref={(node) => {
+                        indexRefs.current[cat.id] = node;
+                      }}
                       type="button"
                       onClick={() => handleIndexClick(cat.id)}
-                      onMouseEnter={() => setHoveredCategory(cat.id)}
-                      onMouseLeave={() => setHoveredCategory(null)}
-                      onFocus={() => setHoveredCategory(cat.id)}
-                      onBlur={() => setHoveredCategory(null)}
-                      className={`skills-index-item group transition-all duration-200 cursor-pointer ${
-                        isHovered ? 'skills-index-item--active' : ''
-                      }`}
+                      onMouseEnter={() => setSyncedCategory(cat.id)}
+                      onMouseLeave={() => setSyncedCategory(null)}
+                      onFocus={() => setSyncedCategory(cat.id)}
+                      onBlur={() => setSyncedCategory(null)}
+                      className="skills-index-item group transition-colors duration-200 cursor-pointer"
                       aria-label={`Jump to ${cat.name} card`}
                     >
                       <div className="flex items-center gap-2">
-                        <span
-                          className={`font-mono text-[10px] tracking-wider transition-colors duration-200 ${
-                            isHovered ? 'text-[#c69b5c] font-bold' : 'text-[#666666]'
-                          }`}
-                        >
+                        <span className="skills-index-num font-mono text-[10px] tracking-wider transition-colors duration-200">
                           {num}
                         </span>
-                        <span
-                          className={`font-title text-[11px] uppercase tracking-[0.14em] transition-colors duration-200 ${
-                            isHovered ? 'text-white font-semibold' : 'text-[#a1a1a1] group-hover:text-white'
-                          }`}
-                        >
+                        <span className="skills-index-name font-title text-[11px] uppercase tracking-[0.14em] transition-colors duration-200">
                           {cat.name}
                         </span>
                       </div>

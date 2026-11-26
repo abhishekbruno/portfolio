@@ -25,6 +25,38 @@ export default function ExecutionOperation({ stages = [] }) {
     offset: ['start 72%', 'end 68%']
   });
 
+  // Suspend decorative Crimson Current CSS animations completely when chapter is offscreen or hidden
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof window === 'undefined') return;
+    let inView = false;
+    const syncPaused = () => {
+      el.classList.toggle('op-chapter-paused', !inView || document.hidden);
+    };
+    syncPaused();
+    const onVis = () => syncPaused();
+    document.addEventListener('visibilitychange', onVis);
+
+    let io = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        (entries) => {
+          inView = Boolean(entries[0]?.isIntersecting);
+          syncPaused();
+        },
+        { rootMargin: '120px 0px', threshold: 0.01 }
+      );
+      io.observe(el);
+    } else {
+      inView = true;
+      syncPaused();
+    }
+    return () => {
+      if (io) io.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, []);
+
   // Bi-directional IntersectionObserver tracks active phase coherently on up & down scroll
   useEffect(() => {
     const elements = stageRefs.current.filter(Boolean);
@@ -153,7 +185,9 @@ export default function ExecutionOperation({ stages = [] }) {
                 style={{
                   scaleY: shouldReduceMotion ? 1 : scrollYProgress
                 }}
-              />
+              >
+                {!shouldReduceMotion && <span className="op-spine-current" aria-hidden="true" />}
+              </motion.div>
             </div>
 
             {/* Quick-jump sticky stage indicator rail */}
@@ -195,6 +229,9 @@ export default function ExecutionOperation({ stages = [] }) {
                   transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                   className={`op-stage-band ${isActive ? 'is-active' : ''}`}
                 >
+                  <div className="op-stage-channel" aria-hidden="true">
+                    <span className="op-stage-channel-pulse" />
+                  </div>
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center w-full">
                     {/* Stage Narrative, Giant Numeral & Grounded Project Spec */}
                     <div className="lg:col-span-6 flex flex-col items-start">
@@ -260,6 +297,7 @@ export default function ExecutionOperation({ stages = [] }) {
                       <div className="op-visual-frame">
                         <StageEngineeringVisual
                           stageIndex={idx}
+                          isActive={isActive}
                           reducedMotion={Boolean(shouldReduceMotion)}
                         />
                       </div>
@@ -298,10 +336,20 @@ export default function ExecutionOperation({ stages = [] }) {
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
               />
+              {/* Active Crimson Current pulse along outcome bus */}
+              {!shouldReduceMotion && (
+                <path
+                  d="M 60 36 L 1060 36"
+                  stroke="#F26375"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  className="op-svg-current-flow op-svg-current-flow--outcome"
+                />
+              )}
               {/* Return refinement loop arc */}
               <path
                 d="M 810 36 C 720 76, 400 76, 310 36"
-                stroke="rgba(223, 34, 56, 0.45)"
+                stroke="rgba(204, 24, 56, 0.45)"
                 strokeWidth="1.2"
                 strokeDasharray="4 4"
               />

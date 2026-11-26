@@ -8,7 +8,6 @@ import {
   Terminal
 } from 'lucide-react';
 import { Github, Linkedin } from '../components/ui/Icons';
-import confetti from 'canvas-confetti';
 import { personalInfo } from '../data/portfolio';
 import SectionHeader from '../components/ui/SectionHeader';
 import ChapterTransition from '../components/layout/ChapterTransition';
@@ -59,9 +58,10 @@ export default function Contact() {
 
     setStatus('submitting');
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setStatus('success');
       try {
+        const { default: confetti } = await import('canvas-confetti');
         confetti({
           particleCount: 50,
           spread: 60,

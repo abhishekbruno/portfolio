@@ -81,29 +81,6 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Neo-Noir Atmospheric Grain & Vignette */
-.bg-vignette {
-  background: radial-gradient(circle at center, transparent 40%, rgba(8, 8, 8, 0.85) 100%);
-}
-
-.bg-crimson-glow {
-  background: radial-gradient(circle at center, rgba(193, 18, 31, 0.15) 0%, transparent 70%);
-}
-
-/* Sharp Architectural Panels */
-.noir-panel {
-  background-color: #171717;
-  border: 1px solid #292929;
-  border-radius: 0px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.noir-panel:hover {
-  border-color: #C1121F;
-  background-color: #1a1a1a;
-  box-shadow: 0 0 20px rgba(193, 18, 31, 0.08);
-}
-
 /* Button & Action Styles */
 .btn-noir-primary {
   display: inline-flex;
@@ -151,39 +128,7 @@
   background-color: rgba(193, 18, 31, 0.05);
 }
 
-/* Keyframes */
-@keyframes redLaserScan {
-  0% {
-    transform: translateX(-100%);
-  }
-  50%, 100% {
-    transform: translateX(100%);
-  }
-}
-
-.animate-laser {
-  animation: redLaserScan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes crimsonBreathe {
-  0% {
-    opacity: 0.85;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1.05;
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: 0.85;
-    transform: scale(1);
-  }
-}
-
-.animate-crimson-breathe {
-  animation: crimsonBreathe 8s ease-in-out infinite;
-}
-
+/* Modal entrance keyframe */
 @keyframes fadeIn {
   from {
     opacity: 0;

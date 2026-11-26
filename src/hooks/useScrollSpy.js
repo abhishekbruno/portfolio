@@ -1,32 +1,70 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export function useScrollSpy(sectionIds, offset = 120) {
   const [activeSection, setActiveSection] = useState(sectionIds[0] || 'hero');
+  const activeRef = useRef(sectionIds[0] || 'hero');
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + offset;
+    if (typeof window === 'undefined' || !sectionIds.length) return;
 
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const id = sectionIds[i];
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop;
-          if (scrollPosition >= top) {
-            setActiveSection(id);
-            return;
-          }
+    let cachedOffsets = [];
+    let rafId = 0;
+
+    const measureSections = () => {
+      cachedOffsets = sectionIds
+        .map((id) => {
+          const el = document.getElementById(id);
+          return el ? { id, top: el.offsetTop } : null;
+        })
+        .filter(Boolean);
+    };
+
+    const evaluateActive = () => {
+      rafId = 0;
+      if (cachedOffsets.length !== sectionIds.length) {
+        measureSections();
+      }
+      const scrollPosition = window.scrollY + offset;
+      let nextSection = sectionIds[0];
+
+      for (let i = cachedOffsets.length - 1; i >= 0; i--) {
+        if (scrollPosition >= cachedOffsets[i].top) {
+          nextSection = cachedOffsets[i].id;
+          break;
         }
       }
-      if (sectionIds.length > 0) {
-        setActiveSection(sectionIds[0]);
+
+      if (nextSection !== activeRef.current) {
+        activeRef.current = nextSection;
+        setActiveSection(nextSection);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    const onScroll = () => {
+      if (!rafId) rafId = requestAnimationFrame(evaluateActive);
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    measureSections();
+    evaluateActive();
+
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        measureSections();
+        evaluateActive();
+      });
+      ro.observe(document.body);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', measureSections, { passive: true });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (ro) ro.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', measureSections);
+    };
   }, [sectionIds, offset]);
 
   return activeSection;
